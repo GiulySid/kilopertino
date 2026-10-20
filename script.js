@@ -60,6 +60,7 @@
     },
     menagrama: {
       kind: "band",
+      theme: "menagrama",
       title: "Menagrama",
       kicker: "Folk · Piano · Fisarmonica",
       lead: "Folk rock band comasca, attiva. Simone entra nel 2024.",
@@ -72,6 +73,7 @@
     },
     soulshake: {
       kind: "band",
+      theme: "soulshake",
       title: "SoulShake",
       kicker: "Weddings · Piano",
       lead: "Musica live per matrimoni ed eventi speciali.",
@@ -83,12 +85,17 @@
       media: [
         { kind: "photo", src: "media/soulshake/soulshake-01.jpeg", alt: "Simone at the keys during a SoulShake set" },
         { kind: "photo", src: "media/soulshake/soulshake-02.jpeg", alt: "SoulShake trio performing at a wedding" },
+        { kind: "video", src: "media/soulshake/soulshake-v01.mp4", alt: "SoulShake live performance clip" },
         { kind: "photo", src: "media/soulshake/soulshake-03.jpeg", alt: "Simone playing piano in a patterned shirt" },
         { kind: "photo", src: "media/soulshake/soulshake-04.jpeg", alt: "SoulShake performing live at an event" },
+        { kind: "video", src: "media/soulshake/soulshake-v02.mp4", alt: "SoulShake wedding set clip" },
         { kind: "photo", src: "media/soulshake/soulshake-05.jpeg", alt: "Simone on piano at a wedding venue" },
         { kind: "photo", src: "media/soulshake/soulshake-06.jpeg", alt: "Close moment of Simone playing with SoulShake" },
+        { kind: "video", src: "media/soulshake/soulshake-v03.mp4", alt: "SoulShake ceremony clip" },
         { kind: "photo", src: "media/soulshake/soulshake-07.jpeg", alt: "Simone with piano-key tie at a church ceremony" },
-        { kind: "photo", src: "media/soulshake/soulshake-08.jpeg", alt: "Simone playing keyboard beside a stone column" }
+        { kind: "photo", src: "media/soulshake/soulshake-08.jpeg", alt: "Simone playing keyboard beside a stone column" },
+        { kind: "video", src: "media/soulshake/soulshake-v04.mp4", alt: "SoulShake live clip" },
+        { kind: "photo", src: "media/soulshake/soulshake-09.jpeg", alt: "SoulShake performing at an event" }
       ]
     },
     "big-mama": {
@@ -214,6 +221,7 @@
     els.toast = document.getElementById("toast");
     els.lightbox = document.getElementById("lightbox");
     els.lightboxImage = document.getElementById("lightbox-image");
+    els.lightboxVideo = document.getElementById("lightbox-video");
     els.lightboxClose = document.getElementById("lightbox-close");
     els.lightboxPrev = document.getElementById("lightbox-prev");
     els.lightboxNext = document.getElementById("lightbox-next");
@@ -225,6 +233,7 @@
 
   function sectionTheme(section) {
     var data = SECTIONS[section];
+    if (data && data.theme) return data.theme;
     if ((data && data.kind === "band") || section === "music") return "violet";
     if (section === "circus") return "red";
     if (section === "contact") return "lime";
@@ -1730,11 +1739,6 @@
     }
     bindContactForm(els.sheet);
     bindShotGallery(els.sheet);
-    var heading = els.sheet.querySelector("#sheet-title");
-    if (heading) {
-      heading.tabIndex = -1;
-      heading.focus({ preventScroll: true });
-    }
   }
 
   function sheetBody(section, data) {
@@ -1873,32 +1877,81 @@
   }
 
   function shotGallery(media) {
-    var shots = media.filter(function (item) { return item.kind !== "video" && item.src; }).map(function (item, index) {
+    var items = (media || []).filter(function (item) { return item.src; });
+    if (!items.length) return "";
+    var shots = items.map(function (item, index) {
+      var kind = item.kind === "video" ? "video" : "photo";
+      var label = item.alt || (kind === "video" ? "Open video" : "Open photo");
+      if (kind === "video") {
+        return (
+          '<div class="shot shot-' + ((index % 4) + 1) + ' shot-video" data-lightbox-index="' + index + '" data-kind="video" data-src="' + escapeHtml(item.src) + '">' +
+            '<video src="' + escapeHtml(item.src) + '" muted loop playsinline preload="metadata" aria-label="' + escapeHtml(label) + '"></video>' +
+            '<button type="button" class="shot-open" data-lightbox-open aria-label="' + escapeHtml(label) + '"></button>' +
+            '<button type="button" class="shot-mute" aria-pressed="true" aria-label="Unmute video">' +
+              '<span class="shot-mute-icon" aria-hidden="true"></span>' +
+            "</button>" +
+          "</div>"
+        );
+      }
       return (
-        '<button type="button" class="shot shot-' + ((index % 4) + 1) + '" data-lightbox-index="' + index + '" aria-label="' + escapeHtml(item.alt || "Open photo") + '">' +
+        '<button type="button" class="shot shot-' + ((index % 4) + 1) + '" data-lightbox-index="' + index + '" data-kind="photo" data-src="' + escapeHtml(item.src) + '" aria-label="' + escapeHtml(label) + '">' +
           '<img src="' + escapeHtml(item.src) + '" alt="' + escapeHtml(item.alt || "") + '" loading="lazy" decoding="async">' +
         "</button>"
       );
     }).join("");
-    if (!shots) return "";
     return '<div class="shot-gallery">' + shots + "</div>";
+  }
+
+  function collectGalleryShots(gallery) {
+    return Array.prototype.map.call(gallery.querySelectorAll("[data-lightbox-index]"), function (el) {
+      return {
+        kind: el.getAttribute("data-kind") === "video" ? "video" : "photo",
+        src: el.getAttribute("data-src") || "",
+        alt: el.getAttribute("aria-label") || ""
+      };
+    }).filter(function (item) { return item.src; });
   }
 
   function bindShotGallery(root) {
     var gallery = root.querySelector(".shot-gallery");
     if (!gallery) return;
+
+    gallery.querySelectorAll("video").forEach(function (video) {
+      var play = video.play();
+      if (play && play.catch) play.catch(function () { /* autoplay may be blocked */ });
+    });
+
+    gallery.querySelectorAll(".shot-mute").forEach(function (button) {
+      button.addEventListener("click", function (event) {
+        event.preventDefault();
+        event.stopPropagation();
+        var wrap = button.closest(".shot-video");
+        var video = wrap ? wrap.querySelector("video") : null;
+        if (!video) return;
+        video.muted = !video.muted;
+        button.setAttribute("aria-pressed", video.muted ? "true" : "false");
+        button.setAttribute("aria-label", video.muted ? "Unmute video" : "Mute video");
+        button.classList.toggle("is-unmuted", !video.muted);
+        if (!video.muted) {
+          var play = video.play();
+          if (play && play.catch) play.catch(function () {});
+        }
+      });
+    });
+
     gallery.querySelectorAll("[data-lightbox-index]").forEach(function (shot) {
-      shot.addEventListener("click", function () {
-        var index = Number(shot.getAttribute("data-lightbox-index"));
-        var shots = Array.prototype.map.call(gallery.querySelectorAll("[data-lightbox-index]"), function (el) {
-          var img = el.querySelector("img");
-          return {
-            src: img ? img.getAttribute("src") : "",
-            alt: img ? img.getAttribute("alt") || "" : ""
-          };
-        }).filter(function (item) { return item.src; });
-        if (!shots.length) return;
-        openLightbox(shots, index);
+      var openers = shot.matches("[data-kind='photo']")
+        ? [shot]
+        : shot.querySelectorAll("[data-lightbox-open]");
+      Array.prototype.forEach.call(openers, function (opener) {
+        opener.addEventListener("click", function (event) {
+          event.preventDefault();
+          event.stopPropagation();
+          var index = Number(shot.getAttribute("data-lightbox-index"));
+          var shots = collectGalleryShots(gallery);
+          if (!shots.length) return;
+          openLightbox(shots, index);
+        });
       });
     });
   }
@@ -1913,8 +1966,28 @@
     });
   }
 
+  function pauseLightboxVideo() {
+    if (!els.lightboxVideo) return;
+    els.lightboxVideo.pause();
+    els.lightboxVideo.removeAttribute("src");
+    els.lightboxVideo.load();
+    els.lightboxVideo.hidden = true;
+    els.lightboxVideo.removeAttribute("controls");
+  }
+
   function openLightbox(shots, index) {
     if (!els.lightbox || !shots || !shots.length) return;
+    if (els.sheet) {
+      els.sheet.querySelectorAll(".shot-gallery video").forEach(function (video) {
+        video.pause();
+        video.muted = true;
+      });
+      els.sheet.querySelectorAll(".shot-mute").forEach(function (button) {
+        button.setAttribute("aria-pressed", "true");
+        button.setAttribute("aria-label", "Unmute video");
+        button.classList.remove("is-unmuted");
+      });
+    }
     state.lightbox.shots = shots;
     state.lightbox.index = ((index % shots.length) + shots.length) % shots.length;
     renderLightbox();
@@ -1925,31 +1998,62 @@
 
   function closeLightbox() {
     if (!els.lightbox || els.lightbox.hidden) return;
+    pauseLightboxVideo();
     els.lightbox.hidden = true;
     document.body.classList.remove("lightbox-open");
     state.lightbox.shots = [];
     state.lightbox.index = 0;
     if (els.lightboxImage) {
+      els.lightboxImage.hidden = true;
       els.lightboxImage.removeAttribute("src");
       els.lightboxImage.alt = "";
+    }
+    if (els.sheet) {
+      els.sheet.querySelectorAll(".shot-gallery video").forEach(function (video) {
+        video.muted = true;
+        var play = video.play();
+        if (play && play.catch) play.catch(function () {});
+      });
     }
   }
 
   function stepLightbox(delta) {
     var shots = state.lightbox.shots;
     if (!shots.length) return;
+    pauseLightboxVideo();
     state.lightbox.index = (state.lightbox.index + delta + shots.length) % shots.length;
     renderLightbox();
   }
 
   function renderLightbox() {
     var shot = state.lightbox.shots[state.lightbox.index];
-    if (!shot || !els.lightboxImage) return;
-    els.lightboxImage.src = shot.src;
-    els.lightboxImage.alt = shot.alt || "";
+    if (!shot) return;
     var many = state.lightbox.shots.length > 1;
     els.lightboxPrev.hidden = !many;
     els.lightboxNext.hidden = !many;
+    els.lightbox.classList.toggle("is-video", shot.kind === "video");
+
+    if (shot.kind === "video") {
+      if (els.lightboxImage) {
+        els.lightboxImage.hidden = true;
+        els.lightboxImage.removeAttribute("src");
+      }
+      if (!els.lightboxVideo) return;
+      els.lightboxVideo.hidden = false;
+      els.lightboxVideo.controls = true;
+      els.lightboxVideo.muted = false;
+      els.lightboxVideo.src = shot.src;
+      els.lightboxVideo.setAttribute("aria-label", shot.alt || "Video");
+      var play = els.lightboxVideo.play();
+      if (play && play.catch) play.catch(function () {});
+      return;
+    }
+
+    pauseLightboxVideo();
+    if (!els.lightboxImage) return;
+    els.lightboxImage.hidden = false;
+    els.lightboxImage.src = shot.src;
+    els.lightboxImage.alt = shot.alt || "";
   }
 
   function bindContactForm(root) {
