@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Interactive portfolio of Simone Pagani — circus and music.">
+  <meta name="theme-color" content="#050505" id="theme-color">
+  <title>Simone Pagani — Circus ✳ Music</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect fill='%23050505' width='32' height='32'/%3E%3Ccircle cx='16' cy='16' r='8' fill='none' stroke='%23FF4B12' stroke-width='2.4'/%3E%3Ccircle cx='16' cy='16' r='3' fill='%23FFD84A'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="app">
+    <header class="mast">
+      <button class="nameplate" id="open-info" type="button" aria-expanded="false" aria-controls="sheet">
+        <span class="name"><span class="name-first">Simone</span> <span class="name-last">Pagani</span></span>
+        <span class="discipline">Circus <span class="slash" aria-hidden="true">/</span> Music</span>
+      </button>
+      <div class="mast-right">
+        <div class="theme-switch" role="radiogroup" aria-label="Color theme">
+          <button type="button" role="radio" data-theme="fire" aria-checked="true" aria-label="Fire"></button>
+          <button type="button" role="radio" data-theme="violet" aria-checked="false" aria-label="Violet"></button>
+          <button type="button" role="radio" data-theme="lime" aria-checked="false" aria-label="Lime"></button>
+          <button type="button" role="radio" data-theme="red" aria-checked="false" aria-label="Red"></button>
+        </div>
+        <button class="sound-toggle" id="sound-toggle" type="button" aria-pressed="false" aria-label="Turn sound on">
+          <span class="sound-icon" aria-hidden="true"></span>
+          <span class="sound-label">Sound off</span>
+        </button>
+      </div>
+    </header>
+
+    <main class="stage" id="stage" data-mode="playground">
+      <div class="field" id="field">
+        <div class="embers" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
+
+        <svg class="room" viewBox="0 0 200 200" aria-hidden="true">
+          <circle cx="168" cy="28" r="74" fill="none" stroke="currentColor" stroke-width="3"></circle>
+          <circle cx="168" cy="28" r="52" fill="none" stroke="var(--red)" stroke-width="1.5"></circle>
+        </svg>
+
+        <svg class="halo" id="halo" aria-hidden="true">
+          <circle id="halo-circle" fill="none" stroke-width="3"></circle>
+          <circle id="halo-inner" fill="none" stroke-width="1.5"></circle>
+        </svg>
+
+        <svg class="waves" id="waves" aria-hidden="true">
+          <path></path>
+          <path></path>
+          <path></path>
+        </svg>
+
+        <div class="orbit" id="orbit" aria-hidden="true">
+          <svg viewBox="0 0 100 100" preserveAspectRatio="none">
+            <path id="orbit-a" fill="none" stroke="currentColor" stroke-width="1.2" stroke-dasharray="2.2 2.6" vector-effect="non-scaling-stroke"></path>
+            <path id="orbit-b" fill="none" stroke="currentColor" stroke-width="1.2" stroke-dasharray="2.2 2.6" vector-effect="non-scaling-stroke"></path>
+          </svg>
+        </div>
+
+        <svg class="drag-trail" id="drag-trail" aria-hidden="true">
+          <path id="drag-circus" fill="none" stroke-linecap="round" stroke-linejoin="round"></path>
+          <path id="drag-music" fill="none" stroke-linecap="round" stroke-linejoin="round"></path>
+          <path id="drag-bio" fill="none" stroke-linecap="round" stroke-linejoin="round"></path>
+          <path id="drag-contact" fill="none" stroke-linecap="round" stroke-linejoin="round"></path>
+        </svg>
+
+        <svg class="flourish" id="flourish" aria-hidden="true">
+          <path id="flourish-path" fill="none" pathLength="1" stroke-linecap="round" stroke-linejoin="round"></path>
+        </svg>
+
+        <button class="mover ball ball-a" id="ball-0" type="button" aria-label="Juggling ball one"></button>
+        <button class="mover ball ball-b" id="ball-1" type="button" aria-label="Juggling ball two"></button>
+        <button class="mover ball ball-c" id="ball-2" type="button" aria-label="Juggling ball three"></button>
+
+        <button class="mover token" id="token-circus" type="button" data-section="circus">
+          <span class="glyph glyph-flame" aria-hidden="true">
+            <svg viewBox="500 220 1200 1660" aria-hidden="true">
+              <path fill="#D33D3D" d="M1664.274,1389.267c0.694,299.491-299.642,457.876-584.895,441.335c-352.529-20.454-517.718-242.709-541.355-501.167c-19.298-210.952,86.12-413.9,196.438-528.78c-3.851,45.95,0.205,94.755,25.39,133.378c25.176,38.631,76.098,63.123,119.087,46.448c54.514-21.148,69.472-93.759,55.261-150.479c-14.211-56.729-48.378-106.948-62.109-163.792c-22.295-92.372,13.615-191.903,75.795-263.759c62.18-71.856,147.669-119.603,235.239-156.509c-52.656,61.736-59.637,158.189-16.408,226.862c41.29,65.604,116.943,99.664,175.495,150.453c98.49,85.444,145.953,234.999,90.193,352.849c-15.047,31.802-36.604,60.188-51.66,91.981c-15.056,31.793-23.202,69.49-9.738,101.994c13.464,32.504,54.666,54.47,85.667,37.831c35.848-19.227,36.39-76.676,15.83-132.213C1594.41,1121.408,1663.972,1257.899,1664.274,1389.267z"/>
+              <path fill="#FF884D" d="M1457.388,1610.865c-43.663,86.529-122.194,153.302-211.923,189.967c-9.475,3.872-19.067,7.419-28.758,10.651c-97.653,32.568-204.79,23.742-294.422-26.884c-67.019-37.854-128.63-100.533-167.796-206.832c-40.674-110.408-17.477-265.767,44.836-359.919c0.452,46.932,50.825,83.068,97.516,78.396c46.701-4.662,85.606-41.241,104.938-84c19.332-42.76,22.207-91.008,21.832-137.94c-0.365-46.932-3.653-94.267,4.47-140.487c8.114-46.22,36.322-119.096,83.263-160.535c-43.691,85.315-8.043,169.201,36.343,239.921c44.386,70.72,101.52,95.369,131.629,216.31c21.126,84.858-21.532,166.161,63.783,188.911c65.787,17.543,117.003-59.314,113.753-104.054C1496.823,1402.667,1501.051,1524.327,1457.388,1610.865z"/>
+              <path fill="#FFCF57" d="M1265.007,1749.257c-38.953,53.744-90.926,83.671-179.279,80.123c-91.202-3.662-145.644-55.117-183.561-126.623c-33.607-63.382-38.275-143.159-22.411-211.116c29.508,56.028,69.535,78.814,124.15,86.187c-52.442-92.688-8.565-258.442,111.798-346.197c-24.025,37.431-19.073,84.995,0.743,124.287c19.816,39.283,52.726,72.12,84.857,104.508c32.131,32.379,64.519,65.766,82.913,105.581C1311.489,1625.052,1303.969,1695.522,1265.007,1749.257z"/>
+            </svg>
+          </span>
+          <span class="mover-label">Circus</span>
+        </button>
+
+        <button class="mover token" id="token-music" type="button" data-section="music">
+          <span class="glyph glyph-bars" aria-hidden="true"><i></i><i></i><i></i></span>
+          <span class="mover-label">Music</span>
+        </button>
+
+        <button class="mover token" id="token-bio" type="button" data-section="bio">
+          <span class="glyph glyph-hoop" aria-hidden="true"></span>
+          <span class="mover-label">Bio</span>
+        </button>
+
+        <button class="mover token" id="token-contact" type="button" data-section="contact">
+          <span class="glyph glyph-mail" aria-hidden="true"></span>
+          <span class="mover-label">Contact</span>
+        </button>
+
+        <div class="piano" id="piano" role="group" aria-label="Piano">
+          <div class="piano-keys">
+            <button type="button" class="key white" data-note="261.63" aria-label="C"></button>
+            <button type="button" class="key white" data-note="293.66" aria-label="D"></button>
+            <button type="button" class="key white" data-note="329.63" aria-label="E"></button>
+            <button type="button" class="key white" data-note="349.23" aria-label="F"></button>
+            <button type="button" class="key white" data-note="392" aria-label="G"></button>
+            <button type="button" class="key white" data-note="440" aria-label="A"></button>
+            <button type="button" class="key white" data-note="493.88" aria-label="B"></button>
+            <button type="button" class="key black" data-note="277.18" aria-label="C sharp"></button>
+            <button type="button" class="key black" data-note="311.13" aria-label="D sharp"></button>
+            <button type="button" class="key black" data-note="369.99" aria-label="F sharp"></button>
+            <button type="button" class="key black" data-note="415.3" aria-label="G sharp"></button>
+            <button type="button" class="key black" data-note="466.16" aria-label="A sharp"></button>
+          </div>
+        </div>
+      </div>
+
+      <section class="sheet" id="sheet" hidden aria-label="Portfolio section"></section>
+    </main>
+
+    <footer class="invite">
+      <!-- <span>Play with the elements</span> -->
+      <span class="track" aria-hidden="true"><span class="bead"></span></span>
+    </footer>
+  </div>
+
+  <aside class="info" id="info" hidden>
+    <p class="info-kicker" id="info-kicker"></p>
+    <p class="info-body" id="info-body"></p>
+    <p class="info-contact" id="info-contact"></p>
+    <button type="button" id="info-close">Close</button>
+  </aside>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <noscript><p class="noscript">This playground needs JavaScript.</p></noscript>
+  <script src="script.js"></script>
+</body>
+</html>
