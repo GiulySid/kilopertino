@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="description" content="Interactive portfolio of Simone Pagani — circus and music.">
   <meta name="theme-color" content="#050505" id="theme-color">
   <title>Simone Pagani — Circus ✳ Music</title>
@@ -17,12 +17,6 @@
         <span class="discipline">Circus <span class="slash" aria-hidden="true">/</span> Music</span>
       </button>
       <div class="mast-right">
-        <div class="theme-switch" role="radiogroup" aria-label="Color theme">
-          <button type="button" role="radio" data-theme="fire" aria-checked="true" aria-label="Fire"></button>
-          <button type="button" role="radio" data-theme="violet" aria-checked="false" aria-label="Violet"></button>
-          <button type="button" role="radio" data-theme="lime" aria-checked="false" aria-label="Lime"></button>
-          <button type="button" role="radio" data-theme="red" aria-checked="false" aria-label="Red"></button>
-        </div>
         <button class="sound-toggle" id="sound-toggle" type="button" aria-pressed="false" aria-label="Turn sound on">
           <span class="sound-icon" aria-hidden="true"></span>
           <span class="sound-label">Sound off</span>
@@ -100,18 +94,30 @@
 
         <div class="piano" id="piano" role="group" aria-label="Piano">
           <div class="piano-keys">
-            <button type="button" class="key white" data-note="261.63" aria-label="C"></button>
-            <button type="button" class="key white" data-note="293.66" aria-label="D"></button>
-            <button type="button" class="key white" data-note="329.63" aria-label="E"></button>
-            <button type="button" class="key white" data-note="349.23" aria-label="F"></button>
-            <button type="button" class="key white" data-note="392" aria-label="G"></button>
-            <button type="button" class="key white" data-note="440" aria-label="A"></button>
-            <button type="button" class="key white" data-note="493.88" aria-label="B"></button>
-            <button type="button" class="key black" data-note="277.18" aria-label="C sharp"></button>
-            <button type="button" class="key black" data-note="311.13" aria-label="D sharp"></button>
-            <button type="button" class="key black" data-note="369.99" aria-label="F sharp"></button>
-            <button type="button" class="key black" data-note="415.3" aria-label="G sharp"></button>
-            <button type="button" class="key black" data-note="466.16" aria-label="A sharp"></button>
+            <button type="button" class="key white" data-note="C4" aria-label="C4"></button>
+            <button type="button" class="key white" data-note="D4" aria-label="D4"></button>
+            <button type="button" class="key white" data-note="E4" aria-label="E4"></button>
+            <button type="button" class="key white" data-note="F4" aria-label="F4"></button>
+            <button type="button" class="key white" data-note="G4" aria-label="G4"></button>
+            <button type="button" class="key white" data-note="A4" aria-label="A4"></button>
+            <button type="button" class="key white" data-note="B4" aria-label="B4"></button>
+            <button type="button" class="key white" data-note="C5" aria-label="C5"></button>
+            <button type="button" class="key white" data-note="D5" aria-label="D5"></button>
+            <button type="button" class="key white" data-note="E5" aria-label="E5"></button>
+            <button type="button" class="key white" data-note="F5" aria-label="F5"></button>
+            <button type="button" class="key white" data-note="G5" aria-label="G5"></button>
+            <button type="button" class="key white" data-note="A5" aria-label="A5"></button>
+            <button type="button" class="key white" data-note="B5" aria-label="B5"></button>
+            <button type="button" class="key black" data-note="Cs4" aria-label="C sharp 4"></button>
+            <button type="button" class="key black" data-note="Ds4" aria-label="D sharp 4"></button>
+            <button type="button" class="key black" data-note="Fs4" aria-label="F sharp 4"></button>
+            <button type="button" class="key black" data-note="Gs4" aria-label="G sharp 4"></button>
+            <button type="button" class="key black" data-note="As4" aria-label="A sharp 4"></button>
+            <button type="button" class="key black" data-note="Cs5" aria-label="C sharp 5"></button>
+            <button type="button" class="key black" data-note="Ds5" aria-label="D sharp 5"></button>
+            <button type="button" class="key black" data-note="Fs5" aria-label="F sharp 5"></button>
+            <button type="button" class="key black" data-note="Gs5" aria-label="G sharp 5"></button>
+            <button type="button" class="key black" data-note="As5" aria-label="A sharp 5"></button>
           </div>
         </div>
       </div>
@@ -133,6 +139,16 @@
   </aside>
 
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <div class="lightbox" id="lightbox" hidden>
+    <button type="button" class="lightbox-close" id="lightbox-close" aria-label="Close photo">X</button>
+    <button type="button" class="lightbox-nav lightbox-prev" id="lightbox-prev" aria-label="Previous photo">‹</button>
+    <figure class="lightbox-frame">
+      <img id="lightbox-image" alt="">
+    </figure>
+    <button type="button" class="lightbox-nav lightbox-next" id="lightbox-next" aria-label="Next photo">›</button>
+  </div>
+
   <noscript><p class="noscript">This playground needs JavaScript.</p></noscript>
   <script src="script.js"></script>
 </body>

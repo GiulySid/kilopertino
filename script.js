@@ -48,7 +48,7 @@
       kicker: "Portfolio",
       lead: "",
       kind: "music",
-      featured: ["menagrama", "big-mama", "panda-fight-club", "regina-maud"],
+      featured: ["menagrama", "soulshake", "big-mama", "panda-fight-club", "regina-maud"],
       also: [
         { slot: "Big band", text: "Add the band, the role and the years." },
         { slot: "Big band", text: "Add the band, the role and the years." },
@@ -61,13 +61,34 @@
     menagrama: {
       kind: "band",
       title: "Menagrama",
-      kicker: "Folk · Piano",
-      lead: "Folk band, currently active. Simone plays piano.",
-      links: [{ label: "Band", href: "" }],
+      kicker: "Folk · Piano · Fisarmonica",
+      lead: "Folk rock band comasca, attiva. Simone entra nel 2024.",
+      story: "Dal 2024 Simone è in formazione come pianista e fisarmonicista — e, quando serve, sputafuoco. Folk, Irish, country e canti della tradizione: un set tra festa e nostalgia. ",
+      links: [
+        { label: "menagrama.it", href: "https://www.menagrama.it/" },
+        { label: "Instagram", href: "https://www.instagram.com/menagrama_band/" }
+      ],
+      media: []
+    },
+    soulshake: {
+      kind: "band",
+      title: "SoulShake",
+      kicker: "Weddings · Piano",
+      lead: "Musica live per matrimoni ed eventi speciali.",
+      story: "Pianista SoulShake dal periodo successivo al Covid. Mi occupo delle musiche per le cerimonie, sia in chiesa che civili: ascoltiamo i vostri gusti, scelgiamo i brani giusti e li porto al piano con un approccio elegante e leggero.",
+      links: [
+        { label: "soulshake.it", href: "https://soulshake.it/" },
+        { label: "Instagram", href: "https://www.instagram.com/soulshaketrio/" }
+      ],
       media: [
-        { kind: "photo", label: "Photo 1" },
-        { kind: "photo", label: "Photo 2" },
-        { kind: "video", label: "Video" }
+        { kind: "photo", src: "media/soulshake/soulshake-01.jpeg", alt: "Simone at the keys during a SoulShake set" },
+        { kind: "photo", src: "media/soulshake/soulshake-02.jpeg", alt: "SoulShake trio performing at a wedding" },
+        { kind: "photo", src: "media/soulshake/soulshake-03.jpeg", alt: "Simone playing piano in a patterned shirt" },
+        { kind: "photo", src: "media/soulshake/soulshake-04.jpeg", alt: "SoulShake performing live at an event" },
+        { kind: "photo", src: "media/soulshake/soulshake-05.jpeg", alt: "Simone on piano at a wedding venue" },
+        { kind: "photo", src: "media/soulshake/soulshake-06.jpeg", alt: "Close moment of Simone playing with SoulShake" },
+        { kind: "photo", src: "media/soulshake/soulshake-07.jpeg", alt: "Simone with piano-key tie at a church ceremony" },
+        { kind: "photo", src: "media/soulshake/soulshake-08.jpeg", alt: "Simone playing keyboard beside a stone column" }
       ]
     },
     "big-mama": {
@@ -138,12 +159,13 @@
     haloR: 0,
     loop: 0,
     last: 0,
-    homeTheme: "fire",
     ballSeq: [],
     dragTrail: [],
     beat: 1.5,
     flashTimer: 0,
-    toastTimer: 0
+    toastTimer: 0,
+    ignoreCloseUntil: 0,
+    lightbox: { shots: [], index: 0 }
   };
 
   function init() {
@@ -153,6 +175,7 @@
     initThemes();
     initSound();
     initPiano();
+    initLightbox();
     initPlayground();
     initDraggableObjects();
     initInteractions();
@@ -189,22 +212,15 @@
     els.sound = document.getElementById("sound-toggle");
     els.soundLabel = els.sound.querySelector(".sound-label");
     els.toast = document.getElementById("toast");
-    els.themeSwitch = document.querySelectorAll(".theme-switch button");
+    els.lightbox = document.getElementById("lightbox");
+    els.lightboxImage = document.getElementById("lightbox-image");
+    els.lightboxClose = document.getElementById("lightbox-close");
+    els.lightboxPrev = document.getElementById("lightbox-prev");
+    els.lightboxNext = document.getElementById("lightbox-next");
   }
 
   function initThemes() {
-    var saved = "fire";
-    try {
-      var stored = localStorage.getItem("kilopertino-theme");
-      if (stored === "violet" || stored === "lime" || stored === "red" || stored === "fire") saved = stored;
-    } catch (err) {}
-    state.homeTheme = saved;
-    paintTheme(saved);
-    els.themeSwitch.forEach(function (button) {
-      button.addEventListener("click", function () {
-        applyColorTheme(button.getAttribute("data-theme"));
-      });
-    });
+    syncSectionTheme();
   }
 
   function sectionTheme(section) {
@@ -220,20 +236,11 @@
     var theme = name || "fire";
     if (theme === "fire") document.body.removeAttribute("data-theme");
     else document.body.setAttribute("data-theme", theme);
-    els.themeSwitch.forEach(function (button) {
-      button.setAttribute("aria-checked", button.getAttribute("data-theme") === theme ? "true" : "false");
-    });
-  }
-
-  function applyColorTheme(name) {
-    state.homeTheme = name || "fire";
-    try { localStorage.setItem("kilopertino-theme", state.homeTheme); } catch (err) {}
-    syncSectionTheme();
   }
 
   function syncSectionTheme() {
     var forced = state.mode && state.mode !== "playground" ? sectionTheme(state.mode) : null;
-    paintTheme(forced || state.homeTheme);
+    paintTheme(forced || "fire");
   }
 
   function buildModel() {
@@ -470,9 +477,35 @@
     window.addEventListener("hashchange", applyFromUrl);
     window.addEventListener("popstate", applyFromUrl);
     document.addEventListener("keydown", function (event) {
+      if (els.lightbox && !els.lightbox.hidden) {
+        if (event.key === "Escape") {
+          event.preventDefault();
+          closeLightbox();
+          return;
+        }
+        if (event.key === "ArrowLeft") {
+          event.preventDefault();
+          stepLightbox(-1);
+          return;
+        }
+        if (event.key === "ArrowRight") {
+          event.preventDefault();
+          stepLightbox(1);
+          return;
+        }
+      }
       if (event.key !== "Escape") return;
       closeInfo();
       if (state.mode !== "playground") returnToPlayground();
+    });
+    els.stage.addEventListener("click", function (event) {
+      if (state.mode === "playground" || !els.sheet || els.sheet.hidden) return;
+      // Full-bleed sheet on mobile: no outside gutter — close via X / Escape only.
+      if (state.layout && state.layout.mobile) return;
+      if (performance.now() < state.ignoreCloseUntil) return;
+      if (els.sheet.contains(event.target)) return;
+      if (event.target.closest && event.target.closest(".token")) return;
+      returnToPlayground();
     });
     applyFromUrl();
   }
@@ -525,36 +558,39 @@
     var w = els.stage.clientWidth;
     var h = els.stage.clientHeight;
     var mobile = mobileQuery.matches || w < 760;
+    if (mobile) {
+      return {
+        w: w,
+        h: h,
+        mobile: true,
+        orbit: {
+          x: w * 0.5,
+          y: h * 0.36,
+          rx: Math.min(96, w * 0.26),
+          ry: Math.min(64, h * 0.1)
+        },
+        bio: { x: w * 0.26, y: h * 0.18 },
+        circus: { x: w * 0.74, y: h * 0.18 },
+        music: { x: w * 0.26, y: h * 0.62 },
+        contact: { x: w * 0.74, y: h * 0.62 },
+        piano: { x: w * 0.5, y: h * 0.86 }
+      };
+    }
     return {
       w: w,
       h: h,
-      mobile: mobile,
+      mobile: false,
       orbit: {
-        x: w * (mobile ? 0.4 : 0.36),
-        y: h * (mobile ? 0.3 : 0.44),
-        rx: mobile ? Math.min(118, w * 0.3) : Math.min(230, w * 0.2),
-        ry: mobile ? Math.min(92, h * 0.16) : Math.min(150, h * 0.22)
+        x: w * 0.36,
+        y: h * 0.44,
+        rx: Math.min(230, w * 0.2),
+        ry: Math.min(150, h * 0.22)
       },
-      circus: {
-        x: w * (mobile ? 0.72 : 0.78),
-        y: h * (mobile ? 0.78 : 0.18)
-      },
-      music: {
-        x: w * (mobile ? 0.22 : 0.2),
-        y: h * (mobile ? 0.58 : 0.74)
-      },
-      bio: {
-        x: w * (mobile ? 0.78 : 0.16),
-        y: h * (mobile ? 0.14 : 0.16)
-      },
-      contact: {
-        x: w * (mobile ? 0.26 : 0.48),
-        y: h * (mobile ? 0.88 : 0.84)
-      },
-      piano: {
-        x: w * (mobile ? 0.74 : 0.8),
-        y: h * (mobile ? 0.56 : 0.68)
-      }
+      circus: { x: w * 0.78, y: h * 0.18 },
+      music: { x: w * 0.2, y: h * 0.74 },
+      bio: { x: w * 0.16, y: h * 0.16 },
+      contact: { x: w * 0.48, y: h * 0.84 },
+      piano: { x: w * 0.8, y: h * 0.68 }
     };
   }
 
@@ -885,6 +921,12 @@
   }
 
   function placeSectionTokens(ease, now, reduced) {
+    if (state.layout.mobile) {
+      state.tokens.forEach(function (item) {
+        item.el.classList.add("is-covered");
+      });
+      return;
+    }
     var covered = coveredSection();
     var shown = [];
     state.tokens.forEach(function (item) {
@@ -893,8 +935,8 @@
       if (!hide) shown.push(item);
     });
     var gutters = sheetGutters();
-    var amp = reduced ? 0 : (state.layout.mobile ? 4 : 8);
-    var tokenScale = state.layout.mobile ? 0.62 : (shown.length > 3 ? 0.78 : 0.9);
+    var amp = reduced ? 0 : 8;
+    var tokenScale = shown.length > 3 ? 0.78 : 0.9;
     var lanes = shown.length > 3
       ? [0.16, 0.38, 0.62, 0.84]
       : [0.22, 0.5, 0.78];
@@ -999,30 +1041,97 @@
     el.style.transform = "translate3d(" + x + "px," + y + "px,0) translate(-50%,-50%) rotate(" + (rot || 0) + "deg) scale(" + (scale || 1) + ")";
   }
 
+  var PIANO_FREQ = {
+    C4: 261.63, Cs4: 277.18, D4: 293.66, Ds4: 311.13, E4: 329.63, F4: 349.23,
+    Fs4: 369.99, G4: 392, Gs4: 415.3, A4: 440, As4: 466.16, B4: 493.88,
+    C5: 523.25, Cs5: 554.37, D5: 587.33, Ds5: 622.25, E5: 659.25, F5: 698.46,
+    Fs5: 739.99, G5: 783.99, Gs5: 830.61, A5: 880, As5: 932.33, B5: 987.77
+  };
+
+  // Star Wars main theme (pickup + fanfare). Times in ms; beat ≈ 480ms.
+  var STAR_WARS_MOTIF = [
+    { note: "D4", at: 0, hold: 140 },
+    { note: "D4", at: 160, hold: 140 },
+    { note: "D4", at: 320, hold: 140 },
+    { note: "G4", at: 480, hold: 900 },
+    { note: "D5", at: 1440, hold: 900 },
+    { note: "C5", at: 2400, hold: 140 },
+    { note: "B4", at: 2560, hold: 140 },
+    { note: "A4", at: 2720, hold: 140 },
+    { note: "G5", at: 2880, hold: 420 },
+    { note: "D5", at: 3360, hold: 900 },
+    { note: "C5", at: 4320, hold: 140 },
+    { note: "B4", at: 4480, hold: 140 },
+    { note: "A4", at: 4640, hold: 140 },
+    { note: "G5", at: 4800, hold: 420 },
+    { note: "D5", at: 5280, hold: 900 },
+    { note: "C5", at: 6240, hold: 140 },
+    { note: "B4", at: 6400, hold: 140 },
+    { note: "C5", at: 6560, hold: 140 },
+    { note: "A4", at: 6720, hold: 1400 }
+  ];
+  var STAR_WARS_LOOP_MS = 9800;
+
+  var pianoMotif = {
+    timers: [],
+    loopTimer: 0,
+    paused: false,
+    generation: 0
+  };
+
   function initPiano() {
     if (!els.piano) return;
+    var resumeTimer = 0;
+    function scheduleMotifResume(delay) {
+      window.clearTimeout(resumeTimer);
+      resumeTimer = window.setTimeout(function () {
+        resumeTimer = 0;
+        if (!els.piano.contains(document.activeElement)) resumePianoMotif();
+      }, delay || 900);
+    }
     els.piano.querySelectorAll(".key").forEach(function (key) {
       key.addEventListener("pointerdown", function (event) {
         event.preventDefault();
         event.stopPropagation();
-        var freq = Number(key.getAttribute("data-note"));
+        var id = key.getAttribute("data-note");
+        var freq = PIANO_FREQ[id];
         if (!freq) return;
-        key.classList.add("is-down");
-        window.setTimeout(function () { key.classList.remove("is-down"); }, 160);
-        playPianoNote(freq);
+        pausePianoMotif(true);
+        pressPianoKey(key, 160);
+        playPianoNote(freq, 0.85);
+        scheduleMotifResume(900);
       });
+    });
+    els.piano.addEventListener("focusin", function () {
+      window.clearTimeout(resumeTimer);
+      pausePianoMotif(false);
+    });
+    els.piano.addEventListener("focusout", function () {
+      scheduleMotifResume(120);
+    });
+    if (!reducedMotion.matches) startPianoMotif();
+    reducedMotion.addEventListener("change", function () {
+      if (reducedMotion.matches) stopPianoMotif();
+      else if (state.mode === "playground") startPianoMotif();
     });
   }
 
-  function playPianoNote(freq) {
+  function pressPianoKey(key, holdMs) {
+    if (!key) return;
+    key.classList.add("is-down");
+    window.setTimeout(function () { key.classList.remove("is-down"); }, holdMs || 160);
+  }
+
+  function playPianoNote(freq, dur) {
     var ctx = ensureAudio();
     if (!ctx) return;
+    var length = typeof dur === "number" ? dur : 0.85;
     var t = ctx.currentTime;
     var master = ctx.createGain();
     master.connect(ctx.destination);
     master.gain.setValueAtTime(0.0001, t);
     master.gain.exponentialRampToValueAtTime(0.16, t + 0.012);
-    master.gain.exponentialRampToValueAtTime(0.0001, t + 0.85);
+    master.gain.exponentialRampToValueAtTime(0.0001, t + length);
     [1, 2, 3].forEach(function (harmonic) {
       var osc = ctx.createOscillator();
       var gain = ctx.createGain();
@@ -1032,8 +1141,76 @@
       osc.connect(gain);
       gain.connect(master);
       osc.start(t);
-      osc.stop(t + 0.9);
+      osc.stop(t + length + 0.05);
     });
+  }
+
+  function clearPianoMotifTimers() {
+    pianoMotif.timers.forEach(function (id) { window.clearTimeout(id); });
+    pianoMotif.timers = [];
+    if (pianoMotif.loopTimer) {
+      window.clearTimeout(pianoMotif.loopTimer);
+      pianoMotif.loopTimer = 0;
+    }
+  }
+
+  function stopPianoMotif() {
+    pianoMotif.generation += 1;
+    pianoMotif.paused = true;
+    clearPianoMotifTimers();
+    if (els.piano) {
+      els.piano.querySelectorAll(".key.is-down").forEach(function (key) {
+        key.classList.remove("is-down");
+      });
+    }
+  }
+
+  function pausePianoMotif(clearKeys) {
+    if (pianoMotif.paused) return;
+    pianoMotif.paused = true;
+    pianoMotif.generation += 1;
+    clearPianoMotifTimers();
+    if (clearKeys && els.piano) {
+      els.piano.querySelectorAll(".key.is-down").forEach(function (key) {
+        key.classList.remove("is-down");
+      });
+    }
+  }
+
+  function resumePianoMotif() {
+    if (!pianoMotif.paused) return;
+    if (reducedMotion.matches || state.mode !== "playground") return;
+    pianoMotif.paused = false;
+    schedulePianoMotif();
+  }
+
+  function startPianoMotif() {
+    if (!els.piano || reducedMotion.matches) return;
+    pianoMotif.paused = false;
+    schedulePianoMotif();
+  }
+
+  function schedulePianoMotif() {
+    if (!els.piano || pianoMotif.paused || reducedMotion.matches) return;
+    clearPianoMotifTimers();
+    var gen = pianoMotif.generation;
+    STAR_WARS_MOTIF.forEach(function (step) {
+      var timer = window.setTimeout(function () {
+        if (gen !== pianoMotif.generation || pianoMotif.paused) return;
+        if (state.mode !== "playground") return;
+        var key = els.piano.querySelector('.key[data-note="' + step.note + '"]');
+        pressPianoKey(key, step.hold);
+        if (state.soundOn) {
+          var freq = PIANO_FREQ[step.note];
+          if (freq) playPianoNote(freq, Math.max(0.18, step.hold / 1000 + 0.12));
+        }
+      }, step.at);
+      pianoMotif.timers.push(timer);
+    });
+    pianoMotif.loopTimer = window.setTimeout(function () {
+      if (gen !== pianoMotif.generation || pianoMotif.paused) return;
+      schedulePianoMotif();
+    }, STAR_WARS_LOOP_MS);
   }
 
   function placePiano() {
@@ -1274,6 +1451,8 @@
     state.mode = section;
     els.stage.dataset.mode = section;
     els.stage.classList.add("is-open");
+    state.ignoreCloseUntil = performance.now() + 450;
+    pausePianoMotif(true);
     if ("inert" in els.field) els.field.inert = false;
     if (!options.fromUrl) writeUrl(section);
     renderSheet(section);
@@ -1311,6 +1490,7 @@
 
   function returnToPlayground(options) {
     options = options || {};
+    closeLightbox();
     closeInfo(true);
     if (state.mode === "playground" && els.sheet.hidden) {
       if (!options.fromUrl) writeUrl(null);
@@ -1331,6 +1511,7 @@
     syncSectionTheme();
     renderFrame(performance.now(), 1);
     syncName();
+    resumePianoMotif();
     var opener = document.getElementById("token-" + previous);
     if (opener) opener.focus({ preventScroll: true });
   }
@@ -1367,18 +1548,32 @@
       ? '<button type="button" class="sheet-back" data-switch="music" aria-label="Back to music">&#8592; Music</button>'
       : "";
     var nav = section === "music" || data.kind === "band" ? "" : sheetNav(section);
+    var bandLinks = data.kind === "band" ? (data.links || []).map(linkMarkup).join("") : "";
+    var titleBlock = bandLinks
+      ? (
+          '<div class="sheet-head">' +
+            '<h1 class="sheet-title" id="sheet-title">' + escapeHtml(data.title) + "</h1>" +
+            '<p class="act-links">' + bandLinks + "</p>" +
+          "</div>"
+        )
+      : '<h1 class="sheet-title" id="sheet-title">' + escapeHtml(data.title) + "</h1>";
     els.sheet.innerHTML =
       '<button type="button" class="sheet-close" data-back aria-label="Close">X</button>' +
       '<div class="sheet-scroll">' +
         back +
         '<p class="sheet-kicker">' + escapeHtml(data.kicker) + "</p>" +
-        '<h1 class="sheet-title" id="sheet-title">' + escapeHtml(data.title) + "</h1>" +
+        titleBlock +
         '<p class="sheet-lead">' + escapeHtml(data.lead) + "</p>" +
         '<div class="sheet-mark" aria-hidden="true"></div>' +
         body +
         nav +
       "</div>";
     els.sheet.hidden = false;
+    // Block the ghost click that opened this sheet from hitting band rows / links.
+    els.sheet.style.pointerEvents = "none";
+    window.setTimeout(function () {
+      if (els.sheet) els.sheet.style.pointerEvents = "";
+    }, 480);
     els.sheet.querySelector(".sheet-scroll").scrollTop = 0;
     void els.sheet.offsetWidth;
     els.sheet.classList.add("is-in");
@@ -1386,7 +1581,12 @@
       returnToPlayground();
     });
     els.sheet.querySelectorAll("[data-switch]").forEach(function (button) {
-      button.addEventListener("click", function () {
+      button.addEventListener("click", function (event) {
+        if (performance.now() < state.ignoreCloseUntil) {
+          event.preventDefault();
+          event.stopPropagation();
+          return;
+        }
         navigateToSection(button.getAttribute("data-switch"));
       });
     });
@@ -1396,6 +1596,7 @@
       if (flame && mark) mark.appendChild(flame.cloneNode(true));
     }
     bindContactForm(els.sheet);
+    bindShotGallery(els.sheet);
     var heading = els.sheet.querySelector("#sheet-title");
     if (heading) {
       heading.tabIndex = -1;
@@ -1479,8 +1680,15 @@
   }
 
   function bandBody(data) {
-    var links = (data.links || []).map(linkMarkup).join("");
-    return mediaStack(data.media) + (links ? '<p class="act-links">' + links + "</p>" : "");
+    var parts = [];
+    if (data.story) {
+      parts.push('<p class="band-story">' + escapeHtml(data.story) + "</p>");
+    }
+    parts.push(mediaStack(data.media));
+    if (data.video && data.video.youtube) {
+      parts.push(bandVideo(data.video));
+    }
+    return parts.join("");
   }
 
   function linkMarkup(link) {
@@ -1490,18 +1698,125 @@
     return '<span class="link-pending">' + escapeHtml(link.label) + " — add the link</span>";
   }
 
+  function bandVideo(video) {
+    var id = String(video.youtube).replace(/[^a-zA-Z0-9_-]/g, "");
+    if (!id) return "";
+    var title = video.title || "Watch on YouTube";
+    var note = video.note
+      ? '<p class="band-video-note">' + escapeHtml(video.note) + "</p>"
+      : "";
+    return (
+      '<section class="band-video">' +
+        '<h2 class="block-title">Listen</h2>' +
+        note +
+        '<div class="band-video-frame">' +
+          '<iframe' +
+            ' src="https://www.youtube.com/embed/' + id + '"' +
+            ' title="' + escapeHtml(title) + '"' +
+            ' allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"' +
+            ' referrerpolicy="strict-origin-when-cross-origin"' +
+            " allowfullscreen" +
+            " loading=\"lazy\"" +
+          "></iframe>" +
+        "</div>" +
+      "</section>"
+    );
+  }
+
   function mediaStack(media) {
     if (!media || !media.length) return "";
+    var hasFiles = media.some(function (item) { return item.src || item.youtube; });
+    if (hasFiles) return shotGallery(media);
     var cards = media.map(function (item) {
       var kind = item.kind === "video" ? "video" : "photo";
       return (
         '<article class="media-card" data-kind="' + kind + '">' +
           '<span class="slide-kind">' + (kind === "video" ? "Video" : "Photo") + "</span>" +
-          '<span class="slide-label">' + escapeHtml(item.label) + " — add the file</span>" +
+          '<span class="slide-label">' + escapeHtml(item.label || "Media") + " — add the file</span>" +
         "</article>"
       );
     }).join("");
     return '<div class="media-stack">' + cards + "</div>";
+  }
+
+  function shotGallery(media) {
+    var shots = media.filter(function (item) { return item.kind !== "video" && item.src; }).map(function (item, index) {
+      return (
+        '<button type="button" class="shot shot-' + ((index % 4) + 1) + '" data-lightbox-index="' + index + '" aria-label="' + escapeHtml(item.alt || "Open photo") + '">' +
+          '<img src="' + escapeHtml(item.src) + '" alt="' + escapeHtml(item.alt || "") + '" loading="lazy" decoding="async">' +
+        "</button>"
+      );
+    }).join("");
+    if (!shots) return "";
+    return '<div class="shot-gallery">' + shots + "</div>";
+  }
+
+  function bindShotGallery(root) {
+    var gallery = root.querySelector(".shot-gallery");
+    if (!gallery) return;
+    gallery.querySelectorAll("[data-lightbox-index]").forEach(function (shot) {
+      shot.addEventListener("click", function () {
+        var index = Number(shot.getAttribute("data-lightbox-index"));
+        var shots = Array.prototype.map.call(gallery.querySelectorAll("[data-lightbox-index]"), function (el) {
+          var img = el.querySelector("img");
+          return {
+            src: img ? img.getAttribute("src") : "",
+            alt: img ? img.getAttribute("alt") || "" : ""
+          };
+        }).filter(function (item) { return item.src; });
+        if (!shots.length) return;
+        openLightbox(shots, index);
+      });
+    });
+  }
+
+  function initLightbox() {
+    if (!els.lightbox) return;
+    els.lightboxClose.addEventListener("click", function () { closeLightbox(); });
+    els.lightboxPrev.addEventListener("click", function () { stepLightbox(-1); });
+    els.lightboxNext.addEventListener("click", function () { stepLightbox(1); });
+    els.lightbox.addEventListener("click", function (event) {
+      if (event.target === els.lightbox) closeLightbox();
+    });
+  }
+
+  function openLightbox(shots, index) {
+    if (!els.lightbox || !shots || !shots.length) return;
+    state.lightbox.shots = shots;
+    state.lightbox.index = ((index % shots.length) + shots.length) % shots.length;
+    renderLightbox();
+    els.lightbox.hidden = false;
+    document.body.classList.add("lightbox-open");
+    els.lightboxClose.focus({ preventScroll: true });
+  }
+
+  function closeLightbox() {
+    if (!els.lightbox || els.lightbox.hidden) return;
+    els.lightbox.hidden = true;
+    document.body.classList.remove("lightbox-open");
+    state.lightbox.shots = [];
+    state.lightbox.index = 0;
+    if (els.lightboxImage) {
+      els.lightboxImage.removeAttribute("src");
+      els.lightboxImage.alt = "";
+    }
+  }
+
+  function stepLightbox(delta) {
+    var shots = state.lightbox.shots;
+    if (!shots.length) return;
+    state.lightbox.index = (state.lightbox.index + delta + shots.length) % shots.length;
+    renderLightbox();
+  }
+
+  function renderLightbox() {
+    var shot = state.lightbox.shots[state.lightbox.index];
+    if (!shot || !els.lightboxImage) return;
+    els.lightboxImage.src = shot.src;
+    els.lightboxImage.alt = shot.alt || "";
+    var many = state.lightbox.shots.length > 1;
+    els.lightboxPrev.hidden = !many;
+    els.lightboxNext.hidden = !many;
   }
 
   function bindContactForm(root) {
