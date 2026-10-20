@@ -1890,8 +1890,8 @@
 
   function setTitle(section) {
     document.title = section && SECTIONS[section]
-      ? SECTIONS[section].title + " — Simone Pagani"
-      : "Simone Pagani — Circus ✳ Music";
+      ? SECTIONS[section].title + " · Simone Pagani"
+      : "Simone Pagani";
   }
 
   function toggleInfo() {
