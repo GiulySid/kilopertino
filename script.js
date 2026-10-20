@@ -792,16 +792,14 @@
         }
         item.rot += (item.restRot + drift.rot - item.rot) * 0.08;
       } else if (!reduced) {
+        item.vy += 0.42 * dt;
         item.x += item.vx * dt;
         item.y += item.vy * dt;
-        item.vx *= Math.pow(0.86, dt);
-        item.vy *= Math.pow(0.86, dt);
-        if (Math.hypot(item.vx, item.vy) < 0.06) {
-          item.vx = 0;
-          item.vy = 0;
-        }
-        clampItem(item);
-        item.rot += (item.restRot - item.rot) * 0.18;
+        item.vx *= Math.pow(0.985, dt);
+        item.rot += (item.restRot - item.rot) * 0.12;
+        if (isOffStage(item)) respawnToken(item);
+      } else if (isOffStage(item)) {
+        respawnToken(item);
       }
     });
   }
@@ -1264,6 +1262,137 @@
     if (item.y > maxY) { item.y = maxY; item.vy = 0; }
   }
 
+  function isOffStage(item) {
+    if (!state.layout) return false;
+    // Stage clips at the edges — respawn as soon as the center leaves the frame.
+    var margin = 24;
+    return (
+      item.x < -margin ||
+      item.y < -margin ||
+      item.x > state.layout.w + margin ||
+      item.y > state.layout.h + margin
+    );
+  }
+
+  function respawnToken(item) {
+    var home = itemHome(item);
+    item.custom = false;
+    item.dragging = false;
+    item.vx = 0;
+    item.vy = 0;
+    item.x = home.x;
+    item.y = home.y;
+    item.rot = item.restRot;
+    item.scale = 1;
+    item.parkX = home.x;
+    item.parkY = home.y;
+    item.el.classList.remove("is-respawn");
+    void item.el.offsetWidth;
+    item.el.classList.add("is-respawn");
+    window.setTimeout(function () {
+      item.el.classList.remove("is-respawn");
+    }, 520);
+    spawnImpact(home.x, home.y);
+  }
+
+  function pointHitsBox(px, py, cx, cy, w, h, pad) {
+    pad = pad == null ? 18 : pad;
+    return (
+      px > cx - w / 2 - pad &&
+      px < cx + w / 2 + pad &&
+      py > cy - h / 2 - pad &&
+      py < cy + h / 2 + pad
+    );
+  }
+
+  function flameHitsPiano(item) {
+    if (!item || item.key !== "circus" || !els.piano || !state.layout) return false;
+    var spot = state.layout.piano;
+    return pointHitsBox(item.x, item.y, spot.x, spot.y, els.piano.offsetWidth || 300, els.piano.offsetHeight || 86, 48);
+  }
+
+  function flameHitsBalls(item) {
+    if (!item || item.key !== "circus" || !state.layout) return false;
+    var orbit = state.layout.orbit;
+    var orbitReach = Math.max(orbit.rx, orbit.ry) + (state.layout.mobile ? 70 : 100);
+    if (Math.hypot(item.x - orbit.x, item.y - orbit.y) < orbitReach) return true;
+    var reach = state.layout.mobile ? 120 : 150;
+    return state.balls.some(function (ball) {
+      return Math.hypot(item.x - ball.x, item.y - ball.y) < reach;
+    });
+  }
+
+  function ignitePiano() {
+    if (!els.piano) return;
+    els.piano.classList.add("is-on-fire");
+    var layer = els.piano.querySelector(".piano-flames");
+    if (!layer) {
+      layer = document.createElement("div");
+      layer.className = "piano-flames";
+      layer.setAttribute("aria-hidden", "true");
+      els.piano.appendChild(layer);
+    }
+    var styles = ["pf-tongue", "pf-spike", "pf-split"];
+    var slots = [3, 15, 28, 42, 56, 70, 84, 94];
+    var html = "";
+    // Shuffle styles so each ignition looks different
+    styles.sort(function () { return Math.random() - 0.5; });
+    slots.forEach(function (left, index) {
+      var kind = styles[index % styles.length];
+      if (Math.random() > 0.45) kind = styles[Math.floor(Math.random() * styles.length)];
+      var h = 34 + Math.floor(Math.random() * 38);
+      var w = 20 + Math.floor(Math.random() * 16);
+      var delay = (Math.random() * 0.28).toFixed(2);
+      var dur = (0.26 + Math.random() * 0.18).toFixed(2);
+      var style =
+        "left:" + left + "%;height:" + h + "px;width:" + w +
+        "px;animation-delay:" + delay + "s;animation-duration:" + dur + "s";
+      if (kind === "pf-split") {
+        html +=
+          '<span class="pf pf-split" style="' + style + '">' +
+            '<span class="pf pf-spike"></span>' +
+            '<span class="pf pf-spike"></span>' +
+            '<span class="pf pf-spike"></span>' +
+          "</span>";
+      } else {
+        html += '<span class="pf ' + kind + '" style="' + style + '"></span>';
+      }
+    });
+    for (var s = 0; s < 5; s += 1) {
+      var sx = 12 + Math.floor(Math.random() * 76);
+      var sd = (Math.random() * 0.8).toFixed(2);
+      html += '<span class="spark" style="left:' + sx + "%;animation-delay:" + sd + 's"></span>';
+    }
+    layer.innerHTML = html;
+    playArpeggio([196, 247, 330, 392]);
+    showToast("Hot keys");
+  }
+
+  function igniteBalls() {
+    state.balls.forEach(function (ball) {
+      ball.el.classList.add("is-on-fire");
+      if (!ball.el.querySelector(".ball-flame")) {
+        var tip = document.createElement("span");
+        tip.className = "ball-flame";
+        tip.setAttribute("aria-hidden", "true");
+        ball.el.appendChild(tip);
+      }
+    });
+    playArpeggio([220, 277, 349]);
+    showToast("Fire balls");
+  }
+
+  function resolveCircusDrop(item) {
+    if (!item || item.key !== "circus") return false;
+    var onBalls = flameHitsBalls(item);
+    var onPiano = flameHitsPiano(item);
+    if (!onBalls && !onPiano) return false;
+    respawnToken(item);
+    if (onBalls) igniteBalls();
+    if (onPiano) ignitePiano();
+    return true;
+  }
+
   function clampPoint(point) {
     var margin = 16;
     point.x = Math.max(margin, Math.min(state.layout.w - margin, point.x));
@@ -1324,7 +1453,6 @@
     if (drag.item) {
       drag.item.x = point.x - drag.offX;
       drag.item.y = point.y - drag.offY;
-      clampItem(drag.item);
       drag.item.rot = drag.item.restRot + Math.max(-18, Math.min(18, dx * 1.15));
       drag.item.scale = 1.06;
       if (drag.moved) {
@@ -1350,11 +1478,16 @@
     if (!item) return;
     item.dragging = false;
     if (drag.moved) {
-      item.custom = true;
-      item.vx = drag.vx;
-      item.vy = drag.vy;
       armSuppress(item);
-      // showToast("Place");
+      if (resolveCircusDrop(item)) {
+        // flame combo handled
+      } else if (isOffStage(item)) {
+        respawnToken(item);
+      } else {
+        item.custom = true;
+        item.vx = drag.vx * 2.4;
+        item.vy = drag.vy * 2.4;
+      }
     } else {
       item.vx = 0;
       item.vy = 0;
