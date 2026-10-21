@@ -1431,9 +1431,8 @@ body.light #drag-bio {
 .shot video {
   display: block;
   width: 100%;
-  height: 100%;
-  object-fit: cover;
-  aspect-ratio: 4 / 5;
+  height: auto;
+  object-fit: contain;
   transition: transform 420ms ease;
   pointer-events: none;
 }
@@ -1525,16 +1524,12 @@ body.light #drag-bio {
 }
 
 .shot-1 { grid-column: 1 / 8; margin-right: 4%; }
-.shot-1 img,
-.shot-1 video { aspect-ratio: 5 / 4; }
 
 .shot-2 { grid-column: 8 / 13; margin-top: 36px; }
 
 .shot-3 { grid-column: 2 / 7; margin-top: -18px; }
 
 .shot-4 { grid-column: 7 / 13; margin-top: 10px; margin-left: 6%; }
-.shot-4 img,
-.shot-4 video { aspect-ratio: 3 / 2; }
 
 .shot-1:nth-child(n+5) { grid-column: 1 / 6; margin: 8px 8% 0 0; }
 .shot-2:nth-child(n+5) { grid-column: 6 / 13; margin: 28px 0 0 4%; }
@@ -2308,7 +2303,6 @@ body.arcade .stage {
     margin: 0;
   }
   .shot:nth-child(odd) { transform: translateY(10px); }
-  .shot img { aspect-ratio: 4 / 5; }
   .band-video-frame { width: 100%; box-shadow: 4px 4px 0 color-mix(in srgb, var(--orange) 35%, transparent); }
   .invite {
     padding:

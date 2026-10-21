@@ -69,7 +69,18 @@
         { label: "menagrama.it", href: "https://www.menagrama.it/" },
         { label: "Instagram", href: "https://www.instagram.com/menagrama_band/" }
       ],
-      media: []
+      media: [
+        { kind: "photo", src: "media/menagrama/menagrama-01.jpg", alt: "Menagrama live on stage" },
+        { kind: "photo", src: "media/menagrama/menagrama-02.jpg", alt: "Simone at the keys with Menagrama" },
+        { kind: "photo", src: "media/menagrama/menagrama-03.jpg", alt: "Menagrama band performing" },
+        { kind: "photo", src: "media/menagrama/menagrama-vespetro.webp", alt: "Vespetrò — a toast with Menagrama" },
+        { kind: "photo", src: "media/menagrama/menagrama-04.jpg", alt: "Menagrama on stage" },
+        { kind: "photo", src: "media/menagrama/menagrama-05.jpg", alt: "Menagrama live set" },
+        { kind: "photo", src: "media/menagrama/menagrama-06.jpg", alt: "Menagrama concert moment" },
+        { kind: "photo", src: "media/menagrama/menagrama-07.jpg", alt: "Menagrama performing live" },
+        { kind: "photo", src: "media/menagrama/menagrama-08.jpg", alt: "Menagrama band photo" },
+        { kind: "photo", src: "media/menagrama/menagrama-09.jpg", alt: "Menagrama live show" }
+      ]
     },
     soulshake: {
       kind: "band",
