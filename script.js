@@ -83,7 +83,7 @@
         { kind: "photo", src: "media/menagrama/menagrama-01.jpg", alt: "Menagrama live on stage" },
         { kind: "photo", src: "media/menagrama/menagrama-02.jpg", alt: "Simone at the keys with Menagrama" },
         { kind: "photo", src: "media/menagrama/menagrama-03.jpg", alt: "Menagrama band performing" },
-        { kind: "photo", src: "media/menagrama/menagrama-vespetro.webp", alt: "Vespetrò, a toast with Menagrama" },
+        { kind: "photo", src: "media/menagrama/menagrama-vespetro.webp", preview: "media/menagrama/menagrama-vespetro.webp", alt: "Vespetrò, a toast with Menagrama" },
         { kind: "photo", src: "media/menagrama/menagrama-04.jpg", alt: "Menagrama on stage" },
         { kind: "photo", src: "media/menagrama/menagrama-05.jpg", alt: "Menagrama live set" },
         { kind: "photo", src: "media/menagrama/menagrama-06.jpg", alt: "Menagrama concert moment" },
@@ -1864,14 +1864,34 @@
     );
   }
 
+  function bandCardCover(band) {
+    var media = (band && band.media) || [];
+    var photo = null;
+    for (var i = 0; i < media.length; i += 1) {
+      if (media[i].kind !== "video" && media[i].src) {
+        photo = media[i];
+        break;
+      }
+    }
+    if (!photo) return "";
+    var preview = encodeMediaSrc(photo.preview || mediaPreviewSrc(photo.src) || photo.src);
+    return (
+      '<span class="band-card-media" aria-hidden="true">' +
+        '<img src="' + escapeHtml(preview) + '" alt="" loading="lazy" decoding="async">' +
+      "</span>"
+    );
+  }
+
   function musicBody(data) {
     var featured = data.featured.map(function (key) {
       var band = SECTIONS[key];
       return (
-        '<button type="button" class="band-row" data-switch="' + key + '">' +
-          '<span class="band-copy">' +
+        '<button type="button" class="band-card" data-switch="' + key + '">' +
+          bandCardCover(band) +
+          '<span class="band-card-copy">' +
             '<span class="band-meta">' + escapeHtml(band.kicker) + "</span>" +
             '<span class="band-name">' + escapeHtml(band.title) + "</span>" +
+            (band.lead ? '<span class="band-card-lead">' + escapeHtml(band.lead) + "</span>" : "") +
           "</span>" +
         "</button>"
       );
@@ -1885,7 +1905,7 @@
     //   );
     // }).join("");
     return (
-      '<div class="acts">' + featured + "</div>"
+      '<div class="acts acts-cards">' + featured + "</div>"
       // '<section class="also">' +
       //   '<h2 class="block-title">Curriculum</h2>' +
       //   '<ul class="also-list">' + also + "</ul>" +
@@ -1957,6 +1977,14 @@
     return String(src || "").split("/").map(encodeURIComponent).join("/");
   }
 
+  function mediaPreviewSrc(src) {
+    var parts = String(src || "").split("/");
+    if (parts.length < 2) return "";
+    var file = parts.pop();
+    var base = file.replace(/\.[^.]+$/, "");
+    return parts.concat(["preview", base + ".jpg"]).join("/");
+  }
+
   function cleanInstagramHandle(handle) {
     return String(handle || "").replace(/^@/, "").replace(/[^a-zA-Z0-9._]/g, "");
   }
@@ -1987,6 +2015,7 @@
       var kind = item.kind === "video" ? "video" : "photo";
       var label = item.alt || (kind === "video" ? "Open video" : "Open photo");
       var src = encodeMediaSrc(item.src);
+      var preview = encodeMediaSrc(item.preview || (kind === "photo" ? mediaPreviewSrc(item.src) : ""));
       var withAttr = (item.with || []).map(cleanInstagramHandle).filter(Boolean).join(" ");
       var credit = creditMarkup(item.with);
       if (kind === "video") {
@@ -2006,9 +2035,11 @@
         );
       }
       return (
-        '<div class="shot shot-' + ((index % 4) + 1) + '" data-lightbox-index="' + index + '" data-kind="photo" data-src="' + escapeHtml(src) + '"' +
+        '<div class="shot shot-' + ((index % 4) + 1) + ' shot-photo is-loading" data-lightbox-index="' + index + '" data-kind="photo" data-src="' + escapeHtml(src) + '"' +
+          (preview ? ' data-preview="' + escapeHtml(preview) + '"' : "") +
           (withAttr ? ' data-with="' + escapeHtml(withAttr) + '"' : "") + ">" +
-          '<img src="' + escapeHtml(src) + '" alt="' + escapeHtml(item.alt || "") + '" loading="lazy" decoding="async">' +
+          '<img alt="' + escapeHtml(item.alt || "") + '" decoding="async">' +
+          '<div class="shot-loader" aria-hidden="true"><span class="shot-loader-bar"></span></div>' +
           '<button type="button" class="shot-open" data-lightbox-open aria-label="' + escapeHtml(label) + '"></button>' +
           credit +
         "</div>"
@@ -2034,6 +2065,7 @@
     if (!gallery) return;
 
     bindLazyVideos(gallery);
+    bindLazyPhotos(gallery);
 
     gallery.querySelectorAll(".shot-mute").forEach(function (button) {
       button.addEventListener("click", function (event) {
@@ -2177,6 +2209,85 @@
       wraps.forEach(function (wrap) {
         wrap.setAttribute("data-inview", "1");
       });
+    }
+
+    pump();
+  }
+
+  function bindLazyPhotos(gallery) {
+    var wraps = Array.prototype.slice.call(gallery.querySelectorAll(".shot-photo[data-src]"));
+    if (!wraps.length) return;
+
+    var maxConcurrent = 3;
+    var active = 0;
+    var cursor = 0;
+
+    function markReady(wrap, img) {
+      if (img.naturalWidth && img.naturalHeight) {
+        wrap.style.aspectRatio = img.naturalWidth + " / " + img.naturalHeight;
+      }
+      wrap.classList.remove("is-loading");
+      wrap.classList.add("is-ready");
+      wrap.setAttribute("data-loaded", "1");
+    }
+
+    function finishSlot() {
+      active = Math.max(0, active - 1);
+      pump();
+    }
+
+    function loadWrap(wrap) {
+      var img = wrap.querySelector("img");
+      var preview = wrap.getAttribute("data-preview") || "";
+      var full = wrap.getAttribute("data-src") || "";
+      if (!img || !full) {
+        wrap.classList.remove("is-loading");
+        wrap.setAttribute("data-loaded", "1");
+        finishSlot();
+        return;
+      }
+
+      wrap.setAttribute("data-loading", "1");
+
+      var settled = false;
+      var triedFull = false;
+
+      var onReady = function () {
+        if (settled) return;
+        settled = true;
+        wrap.removeAttribute("data-loading");
+        markReady(wrap, img);
+        finishSlot();
+      };
+
+      var onError = function () {
+        if (settled) return;
+        if (!triedFull && preview && full && img.getAttribute("src") !== full) {
+          triedFull = true;
+          img.src = full;
+          return;
+        }
+        settled = true;
+        wrap.removeAttribute("data-loading");
+        wrap.classList.remove("is-loading");
+        wrap.classList.add("is-error");
+        wrap.setAttribute("data-loaded", "1");
+        finishSlot();
+      };
+
+      img.addEventListener("load", onReady, { once: true });
+      img.addEventListener("error", onError);
+      img.src = preview || full;
+    }
+
+    function pump() {
+      while (active < maxConcurrent && cursor < wraps.length) {
+        var next = wraps[cursor];
+        cursor += 1;
+        if (!next || next.getAttribute("data-loaded") === "1") continue;
+        active += 1;
+        loadWrap(next);
+      }
     }
 
     pump();

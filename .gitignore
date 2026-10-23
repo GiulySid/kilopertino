@@ -1,3 +1,5 @@
 mail-config.php
 mail-log.txt
 /media
+node_modules/
+package-lock.json
