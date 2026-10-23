@@ -1,4 +1,4 @@
-/* Simone Pagani — creative playground
+/* Simone Pagani - creative playground
    Menagrama, Big Mama Band, Panda Fight Club, Regina Maud,
    the email and Instagram are real.
    Photos, videos, the biography and the smaller projects are still empty. */
@@ -8,11 +8,9 @@
 
   var PROFILE = {
     kicker: "Note",
-    body: "This paragraph is a placeholder. Replace it with Simone's biography.",
-    contactKicker: "Signal",
-    contactLead: "Send a note. It opens in your mail app, already addressed.",
-    contact: "kilopertino@gmail.com",
-    email: "kilopertino@gmail.com",
+    body: "Nato a Segrate nel 1989, musicista e artista di circo.",
+    contact: "info@kilopertino.com",
+    email: "info@kilopertino.com",
     instagram: "https://www.instagram.com/kilopertino/",
     instagramName: "kilopertino"
   };
@@ -21,26 +19,32 @@
     circus: {
       title: "Circus",
       kicker: "Fire mode",
-      lead: "A space for juggling, acrobatics and circus studies.",
-      projects: [
-        {
-          name: "Juggling Studies",
-          discipline: "Juggling",
-          text: "Trajectories, catches and the rhythm of objects in the air.",
-          motif: "orbit"
-        },
-        {
-          name: "Acrobatic Practice",
-          discipline: "Acrobatics",
-          text: "Weight, support and lines held in balance.",
-          motif: "stack"
-        },
-        {
-          name: "Circus Projects",
-          discipline: "Circus",
-          text: "Sketches that place bodies, objects and space in the same frame.",
-          motif: "ring"
-        }
+      lead: "Juggling, acrobatics, fire, and the people I share the floor with.",
+      media: [
+        { kind: "video", src: "media/circo/acrojames.mp4", alt: "Acrobatics with Acrojames", with: ["acrojames"] },
+        { kind: "video", src: "media/circo/alice.mp4", alt: "Circus with Alice", with: ["aliceseueue"] },
+        { kind: "video", src: "media/circo/allenamento.mp4", alt: "Circus training" },
+        { kind: "video", src: "media/circo/avanti + teso.mp4", alt: "With Avanti and Teso" },
+        { kind: "video", src: "media/circo/avanti.mp4", alt: "With Avanti" },
+        { kind: "video", src: "media/circo/balletto ricky.mp4", alt: "Balletto with Ricky", with: ["ricardosaggese"] },
+        { kind: "video", src: "media/circo/cesarsosa.mp4", alt: "With Cesar Sosa", with: ["fitlikesosa"] },
+        { kind: "video", src: "media/circo/clara tessuti.mp4", alt: "Aerial silks with Clara" },
+        { kind: "video", src: "media/circo/fra orsetti.mp4", alt: "With Fra Orsetti", with: ["fra.orsetti"] },
+        { kind: "video", src: "media/circo/fuoco bolas.mp4", alt: "dav.dav.e" },
+        { kind: "video", src: "media/circo/ginevra.mp4", alt: "With Ginevra", with: ["ginevradaros"] },
+        { kind: "video", src: "media/circo/juggling porada.mp4", alt: "Juggling with Porada", with: ["iperactivity_9192","frankywhitebread"] },
+        { kind: "video", src: "media/circo/lico e sputo.mp4", alt: "Fire breath" },
+        { kind: "video", src: "media/circo/licopodium.mp4", alt: "Lycopodium fire" },
+        { kind: "video", src: "media/circo/mara h2h fuoco.mp4", alt: "Hand to hand fire with Mara", with: ["mara_gote"] },
+        { kind: "video", src: "media/circo/marta.mp4", alt: "With Marta", with: ["marta_na92"] },
+        { kind: "video", src: "media/circo/marypink.mp4", alt: "With Marypink", with: ["pinkmarypinky"] },
+        { kind: "video", src: "media/circo/nicolas clave.mp4", alt: "Nicolas juggling", with: ["nitro.las"] },
+        { kind: "video", src: "media/circo/piedintensta.mp4", alt: "Piedintensta"  },
+        { kind: "video", src: "media/circo/roberto qx4.mp4", alt: "With Roberto"  },
+        { kind: "video", src: "media/circo/sara.mp4", alt: "With Sara", with: ["saraa_costantini"] },
+        { kind: "video", src: "media/circo/simo flyer.mp4", alt: "Simone as flyer" },
+        { kind: "video", src: "media/circo/teso.mp4", alt: "With Teso"},
+        { kind: "video", src: "media/circo/tessuto + cerchio 2.mp4", alt: "Aerial silk and hoop" }
       ]
     },
     music: {
@@ -48,14 +52,20 @@
       kicker: "Portfolio",
       lead: "",
       kind: "music",
-      featured: ["menagrama", "soulshake", "big-mama", "panda-fight-club", "regina-maud"],
+      featured: [
+        "menagrama",
+        "soulshake"
+        // "big-mama",
+        // "panda-fight-club",
+        // "regina-maud"
+      ],
       also: [
-        { slot: "Big band", text: "Add the band, the role and the years." },
-        { slot: "Big band", text: "Add the band, the role and the years." },
-        { slot: "Big band", text: "Add the band, the role and the years." },
-        { slot: "Other project", text: "Add the project and the role." },
-        { slot: "Other project", text: "Add the project and the role." },
-        { slot: "Other project", text: "Add the project and the role." }
+        // { slot: "Big band", text: "Add the band, the role and the years." },
+        // { slot: "Big band", text: "Add the band, the role and the years." },
+        // { slot: "Big band", text: "Add the band, the role and the years." },
+        // { slot: "Other project", text: "Add the project and the role." },
+        // { slot: "Other project", text: "Add the project and the role." },
+        // { slot: "Other project", text: "Add the project and the role." }
       ]
     },
     menagrama: {
@@ -64,7 +74,7 @@
       title: "Menagrama",
       kicker: "Folk · Piano · Fisarmonica",
       lead: "Folk rock band comasca, attiva. Simone entra nel 2024.",
-      story: "Dal 2024 Simone è in formazione come pianista e fisarmonicista — e, quando serve, sputafuoco. Folk, Irish, country e canti della tradizione: un set tra festa e nostalgia. ",
+      story: "Dal 2024 Simone è in formazione come pianista e fisarmonicista e, quando serve, sputafuoco. Folk, Irish, country e canti della tradizione: un set tra festa e nostalgia. ",
       links: [
         { label: "menagrama.it", href: "https://www.menagrama.it/" },
         { label: "Instagram", href: "https://www.instagram.com/menagrama_band/" }
@@ -73,7 +83,7 @@
         { kind: "photo", src: "media/menagrama/menagrama-01.jpg", alt: "Menagrama live on stage" },
         { kind: "photo", src: "media/menagrama/menagrama-02.jpg", alt: "Simone at the keys with Menagrama" },
         { kind: "photo", src: "media/menagrama/menagrama-03.jpg", alt: "Menagrama band performing" },
-        { kind: "photo", src: "media/menagrama/menagrama-vespetro.webp", alt: "Vespetrò — a toast with Menagrama" },
+        { kind: "photo", src: "media/menagrama/menagrama-vespetro.webp", alt: "Vespetrò, a toast with Menagrama" },
         { kind: "photo", src: "media/menagrama/menagrama-04.jpg", alt: "Menagrama on stage" },
         { kind: "photo", src: "media/menagrama/menagrama-05.jpg", alt: "Menagrama live set" },
         { kind: "photo", src: "media/menagrama/menagrama-06.jpg", alt: "Menagrama concert moment" },
@@ -147,16 +157,35 @@
     },
     bio: {
       title: "Bio",
-      kicker: "Note",
-      lead: "Portraits and a short text. Both are waiting to be filled in.",
+      kicker: "",
+      lead: "",
       kind: "bio",
-      text: PROFILE.body,
-      photos: ["Portrait 1", "Portrait 2", "Portrait 3", "Portrait 4"]
+      blocks: [
+        {
+          layout: "media-start",
+          photo: {
+            src: "",
+            alt: ""
+          },
+          text: "Nato a Segrate nel 1989, in una numerosa famiglia di musicisti, Simone si avvicina al pianoforte già in tenera età. "
+        },
+        {
+          layout: "text",
+          text: "Crescendo porta il piano e la voce in diverse formazioni: dal prog al blues,dal folk alle cerimonie."
+        },
+        {
+          layout: "media-end",
+          photo: {
+            alt: ""
+          },
+          text: "Più avanti arriva l'acrobatica, e con lei la strada del circo: fuoco, giocoleria, lavoro di coppia e di gruppo. Oggi la sua pratica si muove tra musica e circo, tenendo insieme ritmo, corpo e teatralità."
+        }
+      ]
     },
     contact: {
       title: "Contact",
-      kicker: "Signal",
-      lead: PROFILE.contactLead,
+      kicker: "",
+      lead: "",
       kind: "contact"
     }
   };
@@ -233,6 +262,7 @@
     els.lightbox = document.getElementById("lightbox");
     els.lightboxImage = document.getElementById("lightbox-image");
     els.lightboxVideo = document.getElementById("lightbox-video");
+    els.lightboxCredit = document.getElementById("lightbox-credit");
     els.lightboxClose = document.getElementById("lightbox-close");
     els.lightboxPrev = document.getElementById("lightbox-prev");
     els.lightboxNext = document.getElementById("lightbox-next");
@@ -520,7 +550,7 @@
     });
     els.stage.addEventListener("click", function (event) {
       if (state.mode === "playground" || !els.sheet || els.sheet.hidden) return;
-      // Full-bleed sheet on mobile: no outside gutter — close via X / Escape only.
+      // Full-bleed sheet on mobile: no outside gutter - close via X / Escape only.
       if (state.layout && state.layout.mobile) return;
       if (performance.now() < state.ignoreCloseUntil) return;
       if (els.sheet.contains(event.target)) return;
@@ -1284,7 +1314,7 @@
 
   function isOffStage(item) {
     if (!state.layout) return false;
-    // Stage clips at the edges — respawn as soon as the center leaves the frame.
+    // Stage clips at the edges - respawn as soon as the center leaves the frame.
     var margin = 24;
     return (
       item.x < -margin ||
@@ -1700,7 +1730,6 @@
     var back = data.kind === "band"
       ? '<button type="button" class="sheet-back" data-switch="music" aria-label="Back to music">&#8592; Music</button>'
       : "";
-    var nav = section === "music" || data.kind === "band" ? "" : sheetNav(section);
     var bandLinks = data.kind === "band" ? (data.links || []).map(linkMarkup).join("") : "";
     var titleBlock = bandLinks
       ? (
@@ -1714,12 +1743,11 @@
       '<button type="button" class="sheet-close" data-back aria-label="Close">X</button>' +
       '<div class="sheet-scroll">' +
         back +
-        '<p class="sheet-kicker">' + escapeHtml(data.kicker) + "</p>" +
+        (data.kicker ? '<p class="sheet-kicker">' + escapeHtml(data.kicker) + "</p>" : "") +
         titleBlock +
-        '<p class="sheet-lead">' + escapeHtml(data.lead) + "</p>" +
+        (data.lead ? '<p class="sheet-lead">' + escapeHtml(data.lead) + "</p>" : "") +
         '<div class="sheet-mark" aria-hidden="true"></div>' +
         body +
-        nav +
       "</div>";
     els.sheet.hidden = false;
     // Block the ghost click that opened this sheet from hitting band rows / links.
@@ -1757,7 +1785,8 @@
     if (section === "bio") return bioBody(data);
     if (data.kind === "band") return bandBody(data);
     if (section === "music") return musicBody(data);
-    return '<div class="cards">' + data.projects.map(function (project) {
+    if (section === "circus") return mediaStack(data.media, { muteControl: false });
+    return '<div class="cards">' + (data.projects || []).map(function (project) {
       return (
         '<article class="card">' +
           '<div class="motif motif-' + safeMotif(project.motif) + '" aria-hidden="true">' + motifMarkup(project.motif) + "</div>" +
@@ -1771,28 +1800,66 @@
     }).join("") + "</div>";
   }
 
-  function bioBody(data) {
-    var frames = data.photos.map(function (label) {
-      return '<figure class="portrait"><figcaption>' + escapeHtml(label) + "</figcaption></figure>";
-    }).join("");
+  function bioPhotoMarkup(photo) {
+    if (!photo) return "";
+    if (photo.src) {
+      return (
+        '<figure class="bio-photo">' +
+          '<img src="' + escapeHtml(encodeMediaSrc(photo.src)) + '" alt="' + escapeHtml(photo.alt || "") + '" loading="lazy" decoding="async">' +
+        "</figure>"
+      );
+    }
     return (
-      '<div class="portraits">' + frames + "</div>" +
-      '<p class="bio-text">' + escapeHtml(data.text) + "</p>"
+      '<figure class="bio-photo bio-photo-pending">' +
+        '<figcaption>' + escapeHtml(photo.alt || "Photo") + "</figcaption>" +
+      "</figure>"
     );
+  }
+
+  function bioBody(data) {
+    var blocks = (data.blocks || []).map(function (block) {
+      var text = '<p class="bio-copy">' + escapeHtml(block.text || "") + "</p>";
+      if (block.layout === "media-start") {
+        return (
+          '<div class="bio-row bio-row-media-start">' +
+            bioPhotoMarkup(block.photo) +
+            text +
+          "</div>"
+        );
+      }
+      if (block.layout === "media-end") {
+        return (
+          '<div class="bio-row bio-row-media-end">' +
+            text +
+            bioPhotoMarkup(block.photo) +
+          "</div>"
+        );
+      }
+      return (
+        '<div class="bio-row bio-row-text">' +
+          '<p class="bio-copy bio-copy-indent">' + escapeHtml(block.text || "") + "</p>" +
+        "</div>"
+      );
+    }).join("");
+    return '<div class="bio-story">' + blocks + "</div>";
   }
 
   function contactBody() {
     return (
-      '<form class="contact-form" id="contact-form">' +
+      '<form class="contact-form" id="contact-form" action="./inquire.php" method="post">' +
+        '<label class="contact-honeypot" aria-hidden="true">' +
+          "Company" +
+          '<input type="text" name="company" tabindex="-1" autocomplete="off">' +
+        "</label>" +
         '<label>Name<input name="name" type="text" autocomplete="name" required maxlength="80"></label>' +
         '<label>Your email<input name="email" type="email" autocomplete="email" required maxlength="120"></label>' +
         '<label>Message<textarea name="message" required maxlength="2000"></textarea></label>' +
         '<button class="send" type="submit">Send</button>' +
+        '<p class="form-note" role="status" aria-live="polite"></p>' +
       "</form>" +
-      '<p class="contact-note">The note opens in your mail app, addressed to ' + escapeHtml(PROFILE.email) + ".</p>" +
       '<div class="contact-routes">' +
         '<a href="mailto:' + escapeHtml(PROFILE.email) + '">' + escapeHtml(PROFILE.email) + "</a>" +
-        '<a href="' + escapeHtml(PROFILE.instagram) + '" target="_blank" rel="noopener noreferrer">Instagram — ' + escapeHtml(PROFILE.instagramName) + "</a>" +
+        '<a href="' + escapeHtml(PROFILE.instagram) + '" target="_blank" rel="noopener noreferrer">Instagram: ' + escapeHtml(PROFILE.instagramName) + "</a>" +
       "</div>"
     );
   }
@@ -1809,21 +1876,20 @@
         "</button>"
       );
     }).join("");
-    var also = data.also.map(function (item) {
-      return (
-        "<li>" +
-          '<p class="also-slot">' + escapeHtml(item.slot) + "</p>" +
-          '<p class="also-text">' + escapeHtml(item.text) + "</p>" +
-        "</li>"
-      );
-    }).join("");
+    // var also = (data.also || []).map(function (item) {
+    //   return (
+    //     "<li>" +
+    //       '<p class="also-slot">' + escapeHtml(item.slot) + "</p>" +
+    //       '<p class="also-text">' + escapeHtml(item.text) + "</p>" +
+    //     "</li>"
+    //   );
+    // }).join("");
     return (
-    
-      '<div class="acts">' + featured + "</div>" +
-      '<section class="also">' +
-        '<h2 class="block-title">Curriculum</h2>' +
-        '<ul class="also-list">' + also + "</ul>" +
-      "</section>"
+      '<div class="acts">' + featured + "</div>"
+      // '<section class="also">' +
+      //   '<h2 class="block-title">Curriculum</h2>' +
+      //   '<ul class="also-list">' + also + "</ul>" +
+      // "</section>"
     );
   }
 
@@ -1843,7 +1909,7 @@
     if (link.href) {
       return '<a href="' + escapeHtml(link.href) + '" target="_blank" rel="noopener noreferrer">' + escapeHtml(link.label) + "</a>";
     }
-    return '<span class="link-pending">' + escapeHtml(link.label) + " — add the link</span>";
+    return '<span class="link-pending">' + escapeHtml(link.label) + ": add the link</span>";
   }
 
   function bandVideo(video) {
@@ -1871,43 +1937,81 @@
     );
   }
 
-  function mediaStack(media) {
+  function mediaStack(media, options) {
     if (!media || !media.length) return "";
     var hasFiles = media.some(function (item) { return item.src || item.youtube; });
-    if (hasFiles) return shotGallery(media);
+    if (hasFiles) return shotGallery(media, options);
     var cards = media.map(function (item) {
       var kind = item.kind === "video" ? "video" : "photo";
       return (
         '<article class="media-card" data-kind="' + kind + '">' +
           '<span class="slide-kind">' + (kind === "video" ? "Video" : "Photo") + "</span>" +
-          '<span class="slide-label">' + escapeHtml(item.label || "Media") + " — add the file</span>" +
+          '<span class="slide-label">' + escapeHtml(item.label || "Media") + ": add the file</span>" +
         "</article>"
       );
     }).join("");
     return '<div class="media-stack">' + cards + "</div>";
   }
 
-  function shotGallery(media) {
+  function encodeMediaSrc(src) {
+    return String(src || "").split("/").map(encodeURIComponent).join("/");
+  }
+
+  function cleanInstagramHandle(handle) {
+    return String(handle || "").replace(/^@/, "").replace(/[^a-zA-Z0-9._]/g, "");
+  }
+
+  function creditMarkup(handles) {
+    var list = (handles || []).map(cleanInstagramHandle).filter(Boolean);
+    if (!list.length) return "";
+    return (
+      '<p class="shot-credit">' +
+        list.map(function (handle) {
+          return (
+            '<a href="https://www.instagram.com/' + escapeHtml(handle) + '/"' +
+              ' target="_blank" rel="noopener noreferrer"' +
+              ' aria-label="Instagram @' + escapeHtml(handle) + '">' +
+              "@" + escapeHtml(handle) +
+            "</a>"
+          );
+        }).join('<span class="shot-credit-sep" aria-hidden="true">·</span>') +
+      "</p>"
+    );
+  }
+
+  function shotGallery(media, options) {
     var items = (media || []).filter(function (item) { return item.src; });
     if (!items.length) return "";
+    var showMute = !(options && options.muteControl === false);
     var shots = items.map(function (item, index) {
       var kind = item.kind === "video" ? "video" : "photo";
       var label = item.alt || (kind === "video" ? "Open video" : "Open photo");
+      var src = encodeMediaSrc(item.src);
+      var withAttr = (item.with || []).map(cleanInstagramHandle).filter(Boolean).join(" ");
+      var credit = creditMarkup(item.with);
       if (kind === "video") {
         return (
-          '<div class="shot shot-' + ((index % 4) + 1) + ' shot-video" data-lightbox-index="' + index + '" data-kind="video" data-src="' + escapeHtml(item.src) + '">' +
-            '<video src="' + escapeHtml(item.src) + '" muted loop playsinline preload="metadata" aria-label="' + escapeHtml(label) + '"></video>' +
+          '<div class="shot shot-' + ((index % 4) + 1) + ' shot-video is-loading" data-lightbox-index="' + index + '" data-kind="video" data-src="' + escapeHtml(src) + '"' +
+            (withAttr ? ' data-with="' + escapeHtml(withAttr) + '"' : "") + ">" +
+            '<video muted loop playsinline preload="none" aria-label="' + escapeHtml(label) + '"></video>' +
+            '<div class="shot-loader" aria-hidden="true"><span class="shot-loader-bar"></span></div>' +
             '<button type="button" class="shot-open" data-lightbox-open aria-label="' + escapeHtml(label) + '"></button>' +
-            '<button type="button" class="shot-mute" aria-pressed="true" aria-label="Unmute video">' +
-              '<span class="shot-mute-icon" aria-hidden="true"></span>' +
-            "</button>" +
+            (showMute
+              ? '<button type="button" class="shot-mute" aria-pressed="true" aria-label="Unmute video">' +
+                  '<span class="shot-mute-icon" aria-hidden="true"></span>' +
+                "</button>"
+              : "") +
+            credit +
           "</div>"
         );
       }
       return (
-        '<button type="button" class="shot shot-' + ((index % 4) + 1) + '" data-lightbox-index="' + index + '" data-kind="photo" data-src="' + escapeHtml(item.src) + '" aria-label="' + escapeHtml(label) + '">' +
-          '<img src="' + escapeHtml(item.src) + '" alt="' + escapeHtml(item.alt || "") + '" loading="lazy" decoding="async">' +
-        "</button>"
+        '<div class="shot shot-' + ((index % 4) + 1) + '" data-lightbox-index="' + index + '" data-kind="photo" data-src="' + escapeHtml(src) + '"' +
+          (withAttr ? ' data-with="' + escapeHtml(withAttr) + '"' : "") + ">" +
+          '<img src="' + escapeHtml(src) + '" alt="' + escapeHtml(item.alt || "") + '" loading="lazy" decoding="async">' +
+          '<button type="button" class="shot-open" data-lightbox-open aria-label="' + escapeHtml(label) + '"></button>' +
+          credit +
+        "</div>"
       );
     }).join("");
     return '<div class="shot-gallery">' + shots + "</div>";
@@ -1915,10 +2019,12 @@
 
   function collectGalleryShots(gallery) {
     return Array.prototype.map.call(gallery.querySelectorAll("[data-lightbox-index]"), function (el) {
+      var withAttr = el.getAttribute("data-with") || "";
       return {
         kind: el.getAttribute("data-kind") === "video" ? "video" : "photo",
         src: el.getAttribute("data-src") || "",
-        alt: el.getAttribute("aria-label") || ""
+        alt: (el.querySelector("[data-lightbox-open]") || el).getAttribute("aria-label") || "",
+        with: withAttr ? withAttr.split(/\s+/).filter(Boolean) : []
       };
     }).filter(function (item) { return item.src; });
   }
@@ -1927,10 +2033,7 @@
     var gallery = root.querySelector(".shot-gallery");
     if (!gallery) return;
 
-    gallery.querySelectorAll("video").forEach(function (video) {
-      var play = video.play();
-      if (play && play.catch) play.catch(function () { /* autoplay may be blocked */ });
-    });
+    bindLazyVideos(gallery);
 
     gallery.querySelectorAll(".shot-mute").forEach(function (button) {
       button.addEventListener("click", function (event) {
@@ -1938,7 +2041,7 @@
         event.stopPropagation();
         var wrap = button.closest(".shot-video");
         var video = wrap ? wrap.querySelector("video") : null;
-        if (!video) return;
+        if (!video || !video.getAttribute("src")) return;
         video.muted = !video.muted;
         button.setAttribute("aria-pressed", video.muted ? "true" : "false");
         button.setAttribute("aria-label", video.muted ? "Unmute video" : "Mute video");
@@ -1950,10 +2053,14 @@
       });
     });
 
+    gallery.querySelectorAll(".shot-credit a").forEach(function (link) {
+      link.addEventListener("click", function (event) {
+        event.stopPropagation();
+      });
+    });
+
     gallery.querySelectorAll("[data-lightbox-index]").forEach(function (shot) {
-      var openers = shot.matches("[data-kind='photo']")
-        ? [shot]
-        : shot.querySelectorAll("[data-lightbox-open]");
+      var openers = shot.querySelectorAll("[data-lightbox-open]");
       Array.prototype.forEach.call(openers, function (opener) {
         opener.addEventListener("click", function (event) {
           event.preventDefault();
@@ -1965,6 +2072,114 @@
         });
       });
     });
+  }
+
+  function bindLazyVideos(gallery) {
+    var wraps = Array.prototype.slice.call(gallery.querySelectorAll(".shot-video[data-src]"));
+    if (!wraps.length) return;
+
+    var scrollRoot = gallery.closest(".sheet-scroll") || null;
+    var maxConcurrent = 2;
+    var active = 0;
+    var cursor = 0;
+
+    function syncPlayback(wrap) {
+      var video = wrap.querySelector("video");
+      if (!video || !video.getAttribute("src") || wrap.getAttribute("data-loaded") !== "1") return;
+      if (wrap.getAttribute("data-inview") === "1") {
+        var play = video.play();
+        if (play && play.catch) play.catch(function () {});
+      } else {
+        video.pause();
+      }
+    }
+
+    function markReady(wrap, video) {
+      if (video.videoWidth && video.videoHeight) {
+        wrap.style.aspectRatio = video.videoWidth + " / " + video.videoHeight;
+      }
+      wrap.classList.remove("is-loading");
+      wrap.classList.add("is-ready");
+      wrap.setAttribute("data-loaded", "1");
+      syncPlayback(wrap);
+    }
+
+    function finishSlot() {
+      active = Math.max(0, active - 1);
+      pump();
+    }
+
+    function loadWrap(wrap) {
+      var video = wrap.querySelector("video");
+      var src = wrap.getAttribute("data-src");
+      if (!video || !src) {
+        wrap.classList.remove("is-loading");
+        wrap.setAttribute("data-loaded", "1");
+        finishSlot();
+        return;
+      }
+
+      wrap.setAttribute("data-loading", "1");
+
+      var settled = false;
+      var onReady = function () {
+        if (settled) return;
+        settled = true;
+        wrap.removeAttribute("data-loading");
+        markReady(wrap, video);
+        finishSlot();
+      };
+      var onError = function () {
+        if (settled) return;
+        settled = true;
+        wrap.removeAttribute("data-loading");
+        wrap.classList.remove("is-loading");
+        wrap.classList.add("is-error");
+        wrap.setAttribute("data-loaded", "1");
+        finishSlot();
+      };
+
+      video.addEventListener("loadeddata", onReady, { once: true });
+      video.addEventListener("error", onError, { once: true });
+      video.preload = "auto";
+      video.src = src;
+      video.load();
+    }
+
+    function pump() {
+      while (active < maxConcurrent && cursor < wraps.length) {
+        var next = wraps[cursor];
+        cursor += 1;
+        if (!next || next.getAttribute("data-loaded") === "1") continue;
+        active += 1;
+        loadWrap(next);
+      }
+    }
+
+    if (typeof IntersectionObserver !== "undefined") {
+      var playObserver = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          var wrap = entry.target;
+          if (entry.isIntersecting) {
+            wrap.setAttribute("data-inview", "1");
+          } else {
+            wrap.removeAttribute("data-inview");
+          }
+          syncPlayback(wrap);
+        });
+      }, {
+        root: scrollRoot,
+        rootMargin: "40px 0px",
+        threshold: 0.35
+      });
+      wraps.forEach(function (wrap) { playObserver.observe(wrap); });
+    } else {
+      wraps.forEach(function (wrap) {
+        wrap.setAttribute("data-inview", "1");
+      });
+    }
+
+    pump();
   }
 
   function initLightbox() {
@@ -1989,7 +2204,7 @@
   function openLightbox(shots, index) {
     if (!els.lightbox || !shots || !shots.length) return;
     if (els.sheet) {
-      els.sheet.querySelectorAll(".shot-gallery video").forEach(function (video) {
+      els.sheet.querySelectorAll(".shot-gallery video[src]").forEach(function (video) {
         video.pause();
         video.muted = true;
       });
@@ -2014,16 +2229,23 @@
     document.body.classList.remove("lightbox-open");
     state.lightbox.shots = [];
     state.lightbox.index = 0;
+    renderLightboxCredit([]);
     if (els.lightboxImage) {
       els.lightboxImage.hidden = true;
       els.lightboxImage.removeAttribute("src");
       els.lightboxImage.alt = "";
     }
     if (els.sheet) {
-      els.sheet.querySelectorAll(".shot-gallery video").forEach(function (video) {
+      els.sheet.querySelectorAll(".shot-gallery .shot-video").forEach(function (wrap) {
+        var video = wrap.querySelector("video[src]");
+        if (!video) return;
         video.muted = true;
-        var play = video.play();
-        if (play && play.catch) play.catch(function () {});
+        if (wrap.getAttribute("data-inview") === "1") {
+          var play = video.play();
+          if (play && play.catch) play.catch(function () {});
+        } else {
+          video.pause();
+        }
       });
     }
   }
@@ -2036,6 +2258,25 @@
     renderLightbox();
   }
 
+  function renderLightboxCredit(handles) {
+    if (!els.lightboxCredit) return;
+    var list = (handles || []).map(cleanInstagramHandle).filter(Boolean);
+    if (!list.length) {
+      els.lightboxCredit.hidden = true;
+      els.lightboxCredit.innerHTML = "";
+      return;
+    }
+    els.lightboxCredit.hidden = false;
+    els.lightboxCredit.innerHTML = list.map(function (handle) {
+      return (
+        '<a href="https://www.instagram.com/' + escapeHtml(handle) + '/"' +
+          ' target="_blank" rel="noopener noreferrer">' +
+          "@" + escapeHtml(handle) +
+        "</a>"
+      );
+    }).join('<span aria-hidden="true"> · </span>');
+  }
+
   function renderLightbox() {
     var shot = state.lightbox.shots[state.lightbox.index];
     if (!shot) return;
@@ -2043,6 +2284,7 @@
     els.lightboxPrev.hidden = !many;
     els.lightboxNext.hidden = !many;
     els.lightbox.classList.toggle("is-video", shot.kind === "video");
+    renderLightboxCredit(shot.with);
 
     if (shot.kind === "video") {
       if (els.lightboxImage) {
@@ -2070,31 +2312,54 @@
   function bindContactForm(root) {
     var form = root.querySelector("#contact-form");
     if (!form) return;
+    var note = form.querySelector(".form-note");
+    var button = form.querySelector(".send");
+
+    function setNote(message) {
+      if (!note) return;
+      note.textContent = message || "";
+    }
+
     form.addEventListener("submit", function (event) {
       event.preventDefault();
-      var fields = {
-        name: form.elements.name.value.trim(),
-        email: form.elements.email.value.trim(),
-        message: form.elements.message.value.trim()
-      };
-      if (!fields.name || !fields.email || !fields.message) return;
-      window.location.href = buildMailto(fields);
+      if (form.getAttribute("data-busy") === "1") return;
+
+      var name = String((form.elements.name && form.elements.name.value) || "").trim();
+      var email = String((form.elements.email && form.elements.email.value) || "").trim();
+      var message = String((form.elements.message && form.elements.message.value) || "").trim();
+
+      if (!name || !email || !message) {
+        setNote("Please fill in name, email and message.");
+        return;
+      }
+
+      form.setAttribute("data-busy", "1");
+      if (button) button.disabled = true;
+      setNote("Sending…");
+
+      fetch("./inquire.php", {
+        method: "POST",
+        body: new FormData(form)
+      })
+        .then(function (response) {
+          return response.json().catch(function () {
+            return { ok: false };
+          }).then(function (result) {
+            if (!response.ok || !result.ok) throw new Error("send failed");
+            form.reset();
+            setNote("Sent. Thanks!");
+            showToast("Sent");
+          });
+        })
+        .catch(function () {
+          setNote("Could not send. Email " + PROFILE.email);
+          showToast("Send failed");
+        })
+        .then(function () {
+          form.removeAttribute("data-busy");
+          if (button) button.disabled = false;
+        });
     });
-  }
-
-  function buildMailto(fields) {
-    var subject = "Note from " + fields.name;
-    var body = fields.message + "\n\n" + fields.name + "\n" + fields.email;
-    return "mailto:" + PROFILE.email + "?subject=" + encodeURIComponent(subject) + "&body=" + encodeURIComponent(body);
-  }
-
-  function sheetNav(section) {
-    var links = ["circus", "music", "bio", "contact"].filter(function (key) {
-      return key !== section;
-    }).map(function (key) {
-      return '<button type="button" data-switch="' + key + '">' + escapeHtml(SECTIONS[key].title) + "</button>";
-    }).join("");
-    return '<div class="sheet-nav">' + links + "</div>";
   }
 
   function safeMotif(name) {
