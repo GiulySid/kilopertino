@@ -1977,10 +1977,13 @@
     return String(src || "").split("/").map(encodeURIComponent).join("/");
   }
 
-  function mediaPreviewSrc(src) {
+  function mediaPreviewSrc(src, kind) {
     var parts = String(src || "").split("/");
     if (parts.length < 2) return "";
     var file = parts.pop();
+    if (kind === "video") {
+      return parts.concat(["preview", file]).join("/");
+    }
     var base = file.replace(/\.[^.]+$/, "");
     return parts.concat(["preview", base + ".jpg"]).join("/");
   }
@@ -2015,12 +2018,13 @@
       var kind = item.kind === "video" ? "video" : "photo";
       var label = item.alt || (kind === "video" ? "Open video" : "Open photo");
       var src = encodeMediaSrc(item.src);
-      var preview = encodeMediaSrc(item.preview || (kind === "photo" ? mediaPreviewSrc(item.src) : ""));
+      var preview = encodeMediaSrc(item.preview || mediaPreviewSrc(item.src, kind));
       var withAttr = (item.with || []).map(cleanInstagramHandle).filter(Boolean).join(" ");
       var credit = creditMarkup(item.with);
       if (kind === "video") {
         return (
           '<div class="shot shot-' + ((index % 4) + 1) + ' shot-video is-loading" data-lightbox-index="' + index + '" data-kind="video" data-src="' + escapeHtml(src) + '"' +
+            (preview ? ' data-preview="' + escapeHtml(preview) + '"' : "") +
             (withAttr ? ' data-with="' + escapeHtml(withAttr) + '"' : "") + ">" +
             '<video muted loop playsinline preload="none" aria-label="' + escapeHtml(label) + '"></video>' +
             '<div class="shot-loader" aria-hidden="true"><span class="shot-loader-bar"></span></div>' +
@@ -2143,8 +2147,9 @@
 
     function loadWrap(wrap) {
       var video = wrap.querySelector("video");
-      var src = wrap.getAttribute("data-src");
-      if (!video || !src) {
+      var full = wrap.getAttribute("data-src") || "";
+      var preview = wrap.getAttribute("data-preview") || "";
+      if (!video || !full) {
         wrap.classList.remove("is-loading");
         wrap.setAttribute("data-loaded", "1");
         finishSlot();
@@ -2154,6 +2159,7 @@
       wrap.setAttribute("data-loading", "1");
 
       var settled = false;
+      var triedFull = false;
       var onReady = function () {
         if (settled) return;
         settled = true;
@@ -2163,6 +2169,12 @@
       };
       var onError = function () {
         if (settled) return;
+        if (!triedFull && preview && full && video.getAttribute("src") !== full) {
+          triedFull = true;
+          video.src = full;
+          video.load();
+          return;
+        }
         settled = true;
         wrap.removeAttribute("data-loading");
         wrap.classList.remove("is-loading");
@@ -2172,9 +2184,9 @@
       };
 
       video.addEventListener("loadeddata", onReady, { once: true });
-      video.addEventListener("error", onError, { once: true });
+      video.addEventListener("error", onError);
       video.preload = "auto";
-      video.src = src;
+      video.src = preview || full;
       video.load();
     }
 
