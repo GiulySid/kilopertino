@@ -223,7 +223,6 @@
     initSound();
     initPiano();
     initLightbox();
-    initGift();
     initPlayground();
     initDraggableObjects();
     initInteractions();
@@ -260,8 +259,6 @@
     els.sound = document.getElementById("sound-toggle");
     els.soundLabel = els.sound.querySelector(".sound-label");
     els.toast = document.getElementById("toast");
-    els.gift = document.getElementById("gift");
-    els.giftClose = document.getElementById("gift-close");
     els.lightbox = document.getElementById("lightbox");
     els.lightboxImage = document.getElementById("lightbox-image");
     els.lightboxVideo = document.getElementById("lightbox-video");
@@ -530,14 +527,6 @@
     window.addEventListener("hashchange", applyFromUrl);
     window.addEventListener("popstate", applyFromUrl);
     document.addEventListener("keydown", function (event) {
-      if (els.gift && !els.gift.hidden) {
-        if (event.key === "Escape") {
-          event.preventDefault();
-          closeGift();
-          return;
-        }
-        return;
-      }
       if (els.lightbox && !els.lightbox.hidden) {
         if (event.key === "Escape") {
           event.preventDefault();
@@ -2314,26 +2303,6 @@
     }
 
     pump();
-  }
-
-  function initGift() {
-    if (!els.gift) return;
-    document.body.classList.add("gift-open");
-    if (els.giftClose) {
-      els.giftClose.addEventListener("click", function () { closeGift(); });
-    }
-    els.gift.addEventListener("click", function (event) {
-      if (event.target === els.gift) closeGift();
-    });
-    window.setTimeout(function () {
-      if (els.giftClose) els.giftClose.focus({ preventScroll: true });
-    }, 0);
-  }
-
-  function closeGift() {
-    if (!els.gift || els.gift.hidden) return;
-    els.gift.hidden = true;
-    document.body.classList.remove("gift-open");
   }
 
   function initLightbox() {
